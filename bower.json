@@ -1,0 +1,10 @@
+{
+  "name": "project-leonel-machava",
+  "version": "0.0.1",
+  "authors": [
+    "Leonel Machava <leonelmachava@gmail.com>"
+  ],
+  "description": "TopTal Leonel Machava Project",
+  "license": "Proprietary",
+  "private": true
+}
