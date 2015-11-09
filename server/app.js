@@ -1,6 +1,7 @@
 var config = require('./config'), 
 	express = require('express'),
-	mongoose = require('mongoose');
+	mongoose = require('mongoose'),
+	apiRouter = require('./middlewares/api');
 
 mongoose.connect(config.DATABASE_URL, function(err) {
 	if (err) {
@@ -10,6 +11,8 @@ mongoose.connect(config.DATABASE_URL, function(err) {
 	console.log('Connected to database.');
 	
 	var app = express();
+	
+	app.use('/api/v1/', apiRouter(app, config, {}));
 	
 	app.get('/', function rootRoute(req, res) {
 		res.send('TopTal Leonel Machava Project');
