@@ -6,3 +6,6 @@
 
 // This is the port where the app will be listening from.
 exports.PORT = 4001;
+
+// This is Mongoose/MongoDb connection url
+exports.DATABASE_URL = "mongodb://localhost/egal"
