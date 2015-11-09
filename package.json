@@ -7,7 +7,9 @@
     "test": "test"
   },
   "dependencies": {
-    "bower": "^1.6.5"
+    "bower": "^1.6.5",
+    "express": "^4.13.3",
+    "mongoose": "^4.2.4"
   },
   "devDependencies": {},
   "scripts": {
