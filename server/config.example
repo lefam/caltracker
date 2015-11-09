@@ -1,0 +1,8 @@
+// Since the config/ folder is not shared, this file shows all the config options.
+// that are recognized by the app.
+// This serves only as an example. Please do not store any sensitive info here 
+// as this file is version controlled.
+
+
+// This is the port where the app will be listening from.
+exports.PORT = 4001;
