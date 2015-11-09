@@ -1,0 +1,22 @@
+{
+  "name": "project-leonel-machava",
+  "version": "0.0.1",
+  "description": "TopTal's Leonel Machava Project",
+  "main": "server/app.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "bower": "^1.6.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.toptal.com:tomislav.bacinger/project-leonel-machava.git"
+  },
+  "author": "Leonel Machava <leonelmachava@gmail.com>",
+  "license": "UNLICENSED"
+}
