@@ -1,4 +1,5 @@
-var config = require('./config'), 
+var config = require('./config'),
+	path = require('path'),
 	express = require('express'),
 	mongoose = require('mongoose'),
 	models = require('./models'),
@@ -16,7 +17,7 @@ mongoose.connect(config.DATABASE_URL, function(err) {
 	app.use('/api/v1/', apiRouter(app, config, models));
 	
 	app.get('/', function rootRoute(req, res) {
-		res.send('TopTal Leonel Machava Project');
+		res.sendFile(path.resolve('../public/index.html'));
 	});
 	
 	app.listen(config.PORT);
