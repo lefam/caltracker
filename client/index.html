@@ -8,26 +8,30 @@
 
         <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="/css/main.css" rel="stylesheet">
-		<script src="/vendor/angular/angular.min.js"></script>
 	</head>
-	<body>
+	<body ng-app="app">
         <div class="container">
             <header class="main-header clearfix">
                 <div class="pull-left">
                     <a href="#"><h1 class="zero-margin">CalTracker</h1></a>
                 </div>
                 <ul class="nav nav-pills pull-right">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Login</a></li>
-                    <li class="active"><a href="#">Signup</a></li>
+                    <li><a ui-sref="home">Home</a></li>
+                    <li><a ui-sref="login">Login</a></li>
+                    <li class="active"><a ui-sref="signup">Signup</a></li>
                 </ul>
             </header>
-            <div class="jumbotron">
-                <h1>The Awesome Calories Tracker</h1>
-                <p>
-                    This app will help you to keep track of all your meals and control your daily calories intake.
-                </p>
+            <div ui-view>
+                <div class="jumbotron">
+                    <h1>The Awesome Calories Tracker</h1>
+                    <p>
+                        This app will help you to keep track of all your meals and control your daily calories intake.
+                    </p>
+                </div>
             </div>
         </div>
+        <script src="/vendor/angular/angular.min.js"></script>
+        <script src="/vendor/angular-ui-router/angular-ui-router.min.js"></script>
+        <script src="app.js"></script>
 	</body>
 </html>
