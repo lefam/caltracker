@@ -3,7 +3,8 @@ var config = require('./config'),
 	express = require('express'),
 	mongoose = require('mongoose'),
 	models = require('./models'),
-	apiRouter = require('./middlewares/api');
+	apiMiddleware = require('./middlewares/api'),
+	apiRoutes = require('./controllers');
 
 mongoose.connect(config.DATABASE_URL, function(err) {
 	if (err) {
@@ -14,7 +15,8 @@ mongoose.connect(config.DATABASE_URL, function(err) {
 	
 	var app = express();
 	
-	app.use('/api/v1/', apiRouter(app, config, models));
+	app.use('/api/v1/', apiMiddleware(models));
+	app.use('/api/v1', apiRoutes(models));
 	
 	app.get('/', function rootRoute(req, res) {
 		res.sendFile(path.resolve('../public/index.html'));
