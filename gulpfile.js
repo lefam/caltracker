@@ -9,6 +9,9 @@ gulp.task('vendor', function vendorTask() {
 });
 
 gulp.task('client', function clientTask() {
+    gulp.src('client/css/**/*')
+        .pipe(gulp.dest('public/css/'));
+
     gulp.src('client/index.html')
         .pipe(gulp.dest('public/'));
 
@@ -19,5 +22,5 @@ gulp.task('client', function clientTask() {
 gulp.task('build', ['vendor', 'client']);
 
 gulp.task('watch', function watchTask() {
-   gulp.watch('client//*', ['build']);
+   gulp.watch('client/**/*', ['build']);
 });

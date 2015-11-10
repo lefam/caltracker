@@ -1,0 +1,11 @@
+.zero-margin {
+    margin: 0;
+}
+
+.zero-padding {
+    padding: 0;
+}
+
+.main-header {
+    padding: 15px 0;
+}
