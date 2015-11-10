@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 
 gulp.task('vendor', function vendorTask() {
-	gulp.src('client/vendor/bootstrap/dist//*')
+	gulp.src('client/vendor/bootstrap/dist/**/*')
 		.pipe(gulp.dest('public/vendor/bootstrap/'));
 
 	gulp.src(['client/vendor/angular/angular.min.js', 'client/vendor/angular/angular.min.js.gzip'])
