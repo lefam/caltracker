@@ -13,22 +13,16 @@
         <div class="container">
             <header class="main-header clearfix">
                 <div class="pull-left">
-                    <a href="/"><h1 class="zero-margin">CalTracker</h1></a>
+                    <a ui-sref="home"><h1 class="zero-margin">CalTracker</h1></a>
                 </div>
                 <ul class="nav nav-pills pull-right">
                     <li><a ui-sref="home">Home</a></li>
-                    <li><a ui-sref="login">Login</a></li>
-                    <li class="active"><a ui-sref="signup">Signup</a></li>
+                    <li ng-show="currentUser == null"><a ui-sref="login">Login</a></li>
+                    <li ng-show="currentUser == null" class="active"><a ui-sref="signup">Signup</a></li>
+                    <li ng-show="currentUser != null"><a ui-sref="logout">Logout</a></li>
                 </ul>
             </header>
-            <div ui-view>
-                <div class="jumbotron">
-                    <h1>The Awesome Calories Tracker</h1>
-                    <p>
-                        This app will help you to keep track of all your meals and control your daily calories intake.
-                    </p>
-                </div>
-            </div>
+            <div ui-view></div>
         </div>
         <script src="/vendor/angular/angular.min.js"></script>
         <script src="/vendor/angular-ui-router/angular-ui-router.min.js"></script>
@@ -36,5 +30,7 @@
         <script src="services/authentication.js"></script>
         <script src="services/user.js"></script>
         <script src="controllers/signup.js"></script>
+        <script src="controllers/login.js"></script>
+        <script src="controllers/logout.js"></script>
 	</body>
 </html>
