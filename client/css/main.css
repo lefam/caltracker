@@ -9,3 +9,8 @@
 .main-header {
     padding: 15px 0;
 }
+
+.signup-box {
+    max-width: 400px;
+    margin: 0 auto;
+}

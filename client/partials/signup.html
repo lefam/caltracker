@@ -1,9 +1,27 @@
-<div>
-    <form>
-        <input type="text" ng-model="signupCtrl.username" placeholder="Username">
-        <input type="text" ng-model="signupCtrl.firstName" placeholder="First Name">
-        <input type="text" ng-model="signupCtrl.lastName" placeholder="Last Name">
-        <input type="text" ng-model="signupCtrl.password" placeholder="Password">
-        <input type="submit">
+<div class="signup-box">
+    <form ng-submit="signupCtrl.signup()">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" type="text" class="form-control" ng-model="signupCtrl.user.username">
+        </div>
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input id="firstName" type="text" class="form-control" ng-model="signupCtrl.user.firstName">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input id="lastName" type="text" ng-model="signupCtrl.user.lastName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" class="form-control" ng-model="signupCtrl.user.password">
+        </div>
+        <div class="form-group">
+            <label for="passwordConf">Password Confirmation:</label>
+            <input id="passwordConf" type="password" class="form-control" ng-model="signupCtrl.user.passwordConf">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </div>
     </form>
 </div>

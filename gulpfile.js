@@ -18,6 +18,15 @@ gulp.task('client', function clientTask() {
     gulp.src('client/css/**/*')
         .pipe(gulp.dest('public/css/'));
 
+    gulp.src('client/services/**/*')
+        .pipe(gulp.dest('public/services/'));
+
+    gulp.src('client/controllers/**/*')
+        .pipe(gulp.dest('public/controllers/'));
+
+    gulp.src('client/directives/**/*')
+        .pipe(gulp.dest('public/directives/'));
+
     gulp.src('client/index.html')
         .pipe(gulp.dest('public/'));
 

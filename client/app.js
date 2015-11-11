@@ -9,7 +9,8 @@
                 })
                 .state('signup', {
                     url: '/signup',
-                    templateUrl: 'partials/signup.html'
+                    templateUrl: 'partials/signup.html',
+                    controller: 'SignupController as signupCtrl'
                 })
                 .state('home', {
                     url: '/home',
