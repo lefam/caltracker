@@ -10,5 +10,11 @@ module.exports = function(config, models) {
         }
     });
 
+    router.get('/me', function(req, res) {
+        // The API middleware protects this endpoint and makes sure that the req.user is populated
+        // with the owner of the auth token.
+        res.json(req.user);
+    });
+
     return router;
 };
