@@ -18,6 +18,10 @@
                         $window.sessionStorage.setItem("auth_token", response.data.token);
                         $window.sessionStorage.setItem("user.username", username);
                     }
+                    //$http.get("/api/v1/me")
+                    //    .then( function(response) {
+                    //        alert(response.data.firstName + " - this is working!");
+                    //    });
                 });
         };
 
@@ -27,7 +31,11 @@
         };
 
         this.isAuthenticated = function() {
-            return $window.sessionStorage.getItem("auth_token") != "";
+            return $window.sessionStorage.getItem("auth_token");
+        };
+
+        this.getToken = function() {
+            return $window.sessionStorage.getItem("auth_token");
         };
 
         this.getUsername = function() {

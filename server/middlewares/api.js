@@ -18,13 +18,13 @@ module.exports = function apiRouter(config, models) {
             jwt.verify(token, config.TOKEN_SIGN_SECRET, function(err, decoded) {
                 if (err) {
                     if (err.name == 'TokenExpiredError') {
-                        return res.json({
+                        return res.status(401).json({
                             status: 401,
                             message: 'Token expired!',
                             expiredAt: err.expiredAt
                         });
                     } else if (err.name == 'JsonWebTokenError') {
-                        return res.json({
+                        return res.status(400).json({
                             status: 400,
                             message: 'Invalid Auth Token!'
                         });

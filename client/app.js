@@ -4,9 +4,11 @@
         .config(configBlock)
         .run(runBlock);
 
-    configBlock.$inject = ['$stateProvider', '$urlRouterProvider'];
+    configBlock.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
 
-    function configBlock($stateProvider, $urlRouterProvider) {
+    function configBlock($stateProvider, $urlRouterProvider, $httpProvider) {
+        $httpProvider.interceptors.push('AuthInterceptor');
+
         $urlRouterProvider.otherwise('/');
         $stateProvider
             .state('welcome', {
@@ -31,7 +33,8 @@
             })
             .state('home', {
                 url: '/',
-                templateUrl: 'partials/home.html'
+                templateUrl: 'partials/home.html',
+                controller: 'HomeController as homeCtrl'
             })
             .state('logout', {
                 url: '/logout',
@@ -60,6 +63,11 @@
                 event.preventDefault();
                 $state.go('login');
             }
+        });
+
+        $rootScope.$on('unauthorized', function(e) {
+            AuthService.logout();
+            $state.go("login");
         });
     }
 })();

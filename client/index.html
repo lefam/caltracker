@@ -17,9 +17,9 @@
                 </div>
                 <ul class="nav nav-pills pull-right">
                     <li><a ui-sref="home">Home</a></li>
-                    <li ng-show="currentUser == null"><a ui-sref="login">Login</a></li>
-                    <li ng-show="currentUser == null" class="active"><a ui-sref="signup">Signup</a></li>
-                    <li ng-show="currentUser != null"><a ui-sref="logout">Logout</a></li>
+                    <li ng-hide="currentUser"><a ui-sref="login">Login</a></li>
+                    <li ng-hide="currentUser" class="active"><a ui-sref="signup">Signup</a></li>
+                    <li ng-show="currentUser"><a ui-sref="logout">Logout</a></li>
                 </ul>
             </header>
             <div ui-view></div>
@@ -29,6 +29,8 @@
         <script src="app.js"></script>
         <script src="services/authentication.js"></script>
         <script src="services/user.js"></script>
+        <script src="services/auth_interceptor.js"></script>
+        <script src="controllers/home.js"></script>
         <script src="controllers/signup.js"></script>
         <script src="controllers/login.js"></script>
         <script src="controllers/logout.js"></script>
