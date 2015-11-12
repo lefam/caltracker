@@ -22,10 +22,10 @@ mongoose.connect(config.DATABASE_URL, function(err) {
 	app.use('/api/v1', apiRoutes(config, models));
 	
 	app.get('/', function rootRoute(req, res) {
-		res.sendFile(path.resolve('../public/index.html'));
+		res.sendFile(path.resolve(__dirname + '/../public/index.html'));
 	});
 
-    app.use(express.static(path.resolve('../public')));
+    app.use(express.static(path.resolve(__dirname + '/../public')));
 	
 	app.listen(config.PORT);
 	console.log('Listening on port ' + config.PORT);	

@@ -7,6 +7,7 @@
 
     function SignupController(AuthService, UserService) {
         var vm = this;
+
         vm.user = {};
 
         vm.signup = function() {

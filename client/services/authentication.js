@@ -25,5 +25,13 @@
             $rootScope.currentUser = null;
             $window.sessionStorage.clear();
         };
+
+        this.isAuthenticated = function() {
+            return $window.sessionStorage.getItem("auth_token") != "";
+        };
+
+        this.getUsername = function() {
+            return $window.sessionStorage.getItem("user.username");
+        }
     }
 })();

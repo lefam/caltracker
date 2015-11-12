@@ -21,7 +21,8 @@
     "gulp-uglify": "^1.4.2"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "start": "node server/app"
   },
   "repository": {
     "type": "git",

@@ -39,18 +39,24 @@
             });
     }
 
-    runBlock.$inject = ['$rootScope', '$state', '$window'];
+    runBlock.$inject = ['$rootScope', '$state', 'AuthService'];
 
-    function runBlock($rootScope, $state, $window) {
-        if ($window.sessionStorage.getItem("auth_token") != "") {
+    function runBlock($rootScope, $state, AuthService) {
+        if (AuthService.isAuthenticated()) {
             $rootScope.currentUser = {
-                username: $window.sessionStorage.getItem("username")
+                username: AuthService.getUsername()
             };
         }
 
         $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-            var isAuthed = $window.sessionStorage.getItem("auth_token") != "";
-            if (!isAuthed && !(toState.data && toState.data.doesNotRequireAuth)) {
+            if (AuthService.isAuthenticated()) {
+                // If the user is already authenticated we will not show login and signup screens.
+                // We redirect him to the home screen, instead!
+                if (["signup", "login"].indexOf(toState.name) != -1) {
+                    event.preventDefault();
+                    $state.go('home');
+                }
+            } else if (!(toState.data && toState.data.doesNotRequireAuth)) {
                 event.preventDefault();
                 $state.go('login');
             }
