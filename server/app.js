@@ -18,7 +18,7 @@ mongoose.connect(config.DATABASE_URL, function(err) {
 
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
-	app.use('/api/v1/', apiMiddleware(models));
+	app.use('/api/v1/', apiMiddleware(config, models));
 	app.use('/api/v1', apiRoutes(config, models));
 	
 	app.get('/', function rootRoute(req, res) {
