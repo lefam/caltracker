@@ -59,7 +59,6 @@ module.exports = function(config, models) {
             calories: req.body.calories,
             user: req.user._id
         };
-        console.log(data);
         var meal = new models.meal(data);
         meal.save( function(err, m) {
             if (err) {

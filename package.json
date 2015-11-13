@@ -1,10 +1,14 @@
 {
   "name": "project-leonel-machava",
   "version": "0.0.1",
+  "private": true,
   "description": "TopTal's Leonel Machava Project",
   "main": "server/app.js",
   "directories": {
     "test": "test"
+  },
+  "engines": {
+    "node": "4.2.2"
   },
   "dependencies": {
     "bcrypt": "^0.8.5",
@@ -22,7 +26,8 @@
   },
   "scripts": {
     "test": "gulp test",
-    "start": "node server/app"
+    "start": "node server/app",
+    "start-local": "NODE_ENV=local node server/app"
   },
   "repository": {
     "type": "git",

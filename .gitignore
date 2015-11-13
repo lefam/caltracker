@@ -2,5 +2,6 @@
 /node_modules/
 /client/vendor/
 /public/
-/server/config/
+/server/config/config.local.js
 .idea/
+/npm-debug.log
