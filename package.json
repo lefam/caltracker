@@ -25,6 +25,7 @@
     "gulp-uglify": "^1.4.2"
   },
   "scripts": {
+    "postinstall": "gulp build",
     "test": "gulp test",
     "start": "node server/app",
     "start-local": "NODE_ENV=local node server/app"
