@@ -19,3 +19,11 @@
     max-width: 300px;
     margin: 0 auto;
 }
+
+.meal-box {
+    max-width: 700px;
+}
+
+.vertical-padding-10 {
+    padding: 10px 0;
+}

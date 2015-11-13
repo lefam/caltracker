@@ -16,12 +16,22 @@ module.exports = function(config, models) {
     });
 
     router.get('/', function(req, res, next) {
-        var limit = req.query.limit || 60;
-        var offset = req.query.offset || 0;
-        var fromDateTime = req.query.fromDateTime || (Date.now() - 30 * 24 * 60 * 60 * 1000);
-        var toDateTime = req.query.toDateTime || Date.now();
+        var limit = Number(req.query.limit) || 60;
+        var offset = Number(req.query.offset) || 0;
+        var fromDateTime = Number(req.query.fromDateTime) || (Date.now() - 30 * 24 * 60 * 60 * 1000);
+        var toDateTime = Number(req.query.toDateTime) || Date.now();
 
-        models.meal.find({})
+        fromDateTime = new Date(fromDateTime);
+        toDateTime = new Date(toDateTime);
+
+        var criteria = {
+            dateTime: {
+                $gte: fromDateTime,
+                $lte: toDateTime
+            }
+        };
+
+        models.meal.find(criteria)
             .skip(offset)
             .limit(limit)
             .exec( function(err, meals) {
@@ -49,6 +59,7 @@ module.exports = function(config, models) {
             calories: req.body.calories,
             user: req.user._id
         };
+        console.log(data);
         var meal = new models.meal(data);
         meal.save( function(err, m) {
             if (err) {
