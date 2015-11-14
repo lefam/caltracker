@@ -4,6 +4,6 @@
         .controller('AdminMealsController', AdminMealsController);
 
     function AdminMealsController() {
-    
+
     }
 })();

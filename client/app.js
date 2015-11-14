@@ -10,6 +10,7 @@
         $httpProvider.interceptors.push('AuthInterceptor');
 
         $urlRouterProvider.otherwise('/');
+
         $stateProvider
             .state('welcome', {
                 url: '/welcome',
@@ -39,19 +40,32 @@
             .state('settings', {
                 url: '/settings',
                 templateUrl: 'partials/settings.html',
-                controller: 'SettingsController as settingsCtrl'
+            })
+            .state('settings.meals', {
+                url: '/settings/meals',
+                templateUrl: 'partials/settings.meals.html',
+                controller: 'SettingsMealsController as settingsMealsCtrl'
             })
             .state('settings.profile', {
                 url: '/settings/profile',
-                templateUrl: 'partials/profile.html',
+                templateUrl: 'partials/settings.profile.html',
                 controller: 'ProfileController as profileCtrl'
+            })
+            .state('settings.security', {
+                url: '/settings/security',
+                templateUrl: 'partials/settings.security.html',
+                controller: 'SecurityController as securityCtrl'
             })
             .state('admin', {
                 url: '/admin',
                 templateUrl: 'partials/admin.html',
-                controller: 'AdminController as adminCtrl'
             })
-            .state('admin.profile', {
+            .state('admin.users', {
+                url: '/admin/users',
+                templateUrl: 'partials/admin.users.html',
+                controller: 'AdminUsersController as adminUsersCtrl'
+            })
+            .state('admin.meals', {
                 url: '/admin/meals',
                 templateUrl: 'partials/admin.meals.html',
                 controller: 'AdminMealsController as adminMealsCtrl'
