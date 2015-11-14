@@ -6,25 +6,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Leonel Machava Project - Calories Tracker</title>
 
+        <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
         <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="/css/main.css" rel="stylesheet">
+        <script src="/vendor/angular/angular.min.js"></script>
 	</head>
 	<body ng-app="app">
         <div class="container">
             <header class="main-header clearfix">
-                <div class="pull-left">
-                    <a ui-sref="home"><h1 class="zero-margin">CalTracker</h1></a>
-                </div>
-                <ul class="nav nav-pills pull-right">
-                    <li><a ui-sref="home">Home</a></li>
-                    <li ng-hide="currentUser"><a ui-sref="login">Login</a></li>
-                    <li ng-hide="currentUser" class="active"><a ui-sref="signup">Signup</a></li>
-                    <li ng-show="currentUser"><a ui-sref="logout">Logout</a></li>
-                </ul>
+                <a class="logo" ng-class="{'center-block':  !currentUser}"  ui-sref="home"><h1 class="zero-margin">CalTracker</h1></a>
+                <nav class="" ng-show="currentUser">
+                    <ul class="nav nav-pills">
+                        <li ui-sref-active="active"><a ui-sref="home">Dashboard</a></li>
+                        <li ui-sref-active="active"><a ui-sref="settings">Settings</a></li>
+                        <li ui-sref-active="active"><a ui-sref="logout">Administration</a></li>
+                        <li ui-sref-active="active"><a ui-sref="logout">Logout</a></li>
+                    </ul>
+                </nav>
             </header>
-            <div ui-view></div>
+            <main>
+                <div ui-view></div>
+            </main>
         </div>
-        <script src="/vendor/angular/angular.min.js"></script>
         <script src="/vendor/angular-ui-router/angular-ui-router.min.js"></script>
         <script src="app.js"></script>
         <script src="services/authentication.js"></script>

@@ -5,16 +5,18 @@
         <p/>
     </div>
     <div class="meal-box">
-        <div ng-hide="homeCtrl.isMealFormVisible" class="vertical-padding-10">
-            <a class="btn btn-primary" ng-click="homeCtrl.toggleMealForm()">{{homeCtrl.formToggleText}}</a>
+        <div class="form-meal">
+            <div ng-hide="homeCtrl.isMealFormVisible" class="vertical-padding-10">
+                <a class="btn btn-primary" ng-click="homeCtrl.toggleMealForm()">{{homeCtrl.formToggleText}}</a>
+            </div>
+            <form ng-show="homeCtrl.isMealFormVisible" class="form-inline" ng-submit="homeCtrl.addMeal()">
+                <input type="text" class="form-control" ng-model="homeCtrl.meal.food" placeholder="What you ate?">
+                <input type="text" class="form-control" ng-model="homeCtrl.meal.calories" placeholder="Number of calories">
+                <input type="datetime" class="form-control" ng-model="homeCtrl.meal.dateTime" placeholder="Datetime">
+                <button type="submit" class="btn btn-success">Save</button>
+                <a href="#" ng-click="homeCtrl.toggleMealForm()">Cancel</a>
+            </form>
         </div>
-        <form ng-show="homeCtrl.isMealFormVisible" class="form-inline" ng-submit="homeCtrl.addMeal()">
-            <input type="text" class="form-control" ng-model="homeCtrl.meal.food" placeholder="What you ate?">
-            <input type="text" class="form-control" ng-model="homeCtrl.meal.calories" placeholder="Number of calories">
-            <input type="datetime" class="form-control" ng-model="homeCtrl.meal.dateTime" placeholder="Datetime">
-            <button type="submit" class="btn btn-success">Save</button>
-            <a href="#" ng-click="homeCtrl.toggleMealForm()">Cancel</a>
-        </form>
 
         <table class="table">
             <thead>
@@ -26,7 +28,7 @@
             <tbody>
                 <tr ng-repeat="meal in homeCtrl.meals">
                     <td>{{meal.food}}</td>
-                    <td>{{meal.dateTime}}</td>
+                    <td>{{meal.dateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td>{{meal.calories}}</td>
                     <td><a href="#">Edit</a></td>
                     <td><a href="#">Remove</a></td>

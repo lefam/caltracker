@@ -1,3 +1,35 @@
+body {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    background-color: #3E4651;
+    position: relative;
+    color: #fff;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.main-header {
+    padding: 10px 0;
+    padding: 0;
+}
+
+a.logo {
+    display: block;
+    max-width: 180px;
+    text-align: center;
+    padding: 5px 10px;
+    background-color: #F1654C;
+    color: #fff;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.logo h1 {
+    font-size: 30px;
+}
+
 .zero-margin {
     margin: 0;
 }
@@ -6,18 +38,46 @@
     padding: 0;
 }
 
-.main-header {
-    padding: 15px 0;
-}
-
+.login-box,
 .signup-box {
     max-width: 400px;
-    margin: 0 auto;
+    margin: 50px auto;
 }
 
-.login-box {
-    max-width: 300px;
-    margin: 0 auto;
+.login-box form, .signup-box form {
+    background-color: #fff;
+    padding: 15px 17px;
+    border-radius: 3px;
+    color: #666;
+}
+
+.login-box label {
+    color: #777;
+}
+
+.login-box input,
+.signup-box input {
+    display: block;
+    width: 100%;
+    outline: none;
+    font-size: 18px;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 3px;
+}
+
+.button {
+    padding: 15px 10px;
+    background-color: #5fcf80;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 4px;
+}
+
+.login-box button,
+.signup-box button {
+    width: 100%;
 }
 
 .meal-box {
@@ -25,5 +85,29 @@
 }
 
 .vertical-padding-10 {
+    padding: 10px 0;
+}
+
+.main-header nav {
+    position: absolute;
+    top: 10px;
+    right: 0;
+}
+
+.container {
+    position: relative;
+}
+
+main {
+    margin-top: 30px;
+}
+
+.table {
+    background-color: #fff;
+    color: #666;
+    border-radius: 4px;
+}
+
+.form-meal {
     padding: 10px 0;
 }
