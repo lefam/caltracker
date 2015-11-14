@@ -34,5 +34,11 @@
                 .post('/api/v1/meals', data)
                 .then(handleSuccess);
         }
+
+        this.updateMeal = function(meal) {
+            return $http
+                .put('/api/v1/meals/' + meal._id, meal)
+                .then(handleSuccess);
+        }
     }
 })();

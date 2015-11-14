@@ -9,7 +9,7 @@ module.exports = function(config, models) {
 
         // This makes sure that a regular user is able to fetch only his meals but gives ability for
         // managers and administrators to fetch any meal.
-        if (req.user.role < models.roles.ROLE_MANAGER) {
+        if (req.user.role < models.user.roles().ROLE_MANAGER) {
             criteria.user = req.user._id;
         }
 
@@ -67,7 +67,7 @@ module.exports = function(config, models) {
 
         // This makes sure that a regular user is able to delete only his meals but gives ability for
         // administrators to delete any meal.
-        if (req.user.role <= models.roles.ROLE_MANAGER) {
+        if (req.user.role <= models.user.roles().ROLE_MANAGER) {
             criteria.user = req.user._id;
         }
 
@@ -128,11 +128,11 @@ module.exports = function(config, models) {
 
         // This makes sure that regular and manager users are able to fetch only their meals but gives ability for
         // administrators to update any meal.
-        if (req.user.role <= models.roles.ROLE_MANAGER) {
+        if (req.user.role <= models.user.roles().ROLE_MANAGER) {
             criteria.user = req.user._id;
         }
 
-        models.meal.update({_id: id, $set: data}, function(err) {
+        models.meal.update(criteria, {$set: data}, function(err) {
             if (err) {
                 return next(err);
             }
