@@ -16,10 +16,8 @@
             return $http
                 .post('/api/v1/auth/login', credentials)
                 .then(function(response) {
-                    if( response.data.status === 1 && response.data.token != '' ) {
-                        store.setItem("auth_token", response.data.token);
-                        store.setItem("user.username", username);
-                    }
+                    store.setItem("auth_token", response.data.token);
+                    store.setItem("user.username", username);
                     $rootScope.currentUser = {
                         username: username
                     };
