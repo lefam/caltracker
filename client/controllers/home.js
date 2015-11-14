@@ -67,7 +67,18 @@
         };
 
         this.removeMeal = function(id) {
-            alert(id);
+            if (confirm("Are you sure you want to remove this meal?")) {
+                MealService
+                    .removeMeal(id)
+                    .then( function() {
+                        vm.meals = vm.meals.filter(function(t) {
+                            return t._id !== id
+                        });
+                    })
+                    .catch( function() {
+                        alert('Failed to remove meal!');
+                    });
+            }
         };
     }
 })();

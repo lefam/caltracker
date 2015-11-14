@@ -33,11 +33,17 @@
             return $http
                 .post('/api/v1/meals', data)
                 .then(handleSuccess);
-        }
+        };
 
         this.updateMeal = function(meal) {
             return $http
                 .put('/api/v1/meals/' + meal._id, meal)
+                .then(handleSuccess);
+        };
+
+        this.removeMeal = function(id) {
+            return $http
+                .delete('/api/v1/meals/' + id)
                 .then(handleSuccess);
         }
     }
