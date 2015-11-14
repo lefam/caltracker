@@ -51,7 +51,8 @@ module.exports = function(config, models) {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            role: 0
         };
         bcrypt.hash(data.password, 10, function(err, hash) {
             data.password = hash;

@@ -3,7 +3,17 @@ var router = require('express').Router();
 module.exports = function(config, models) {
     router.get('/:id', function(req, res, next) {
         var id = req.params.id;
-        models.meal.findOne({_id: id}, function(err, meal) {
+        var criteria = {
+            _id: id
+        };
+
+        // This makes sure that a regular user is able to fetch only his meals but gives ability for
+        // managers and administrators to fetch any meal.
+        if (req.user.role < models.roles.ROLE_MANAGER) {
+            criteria.user = req.user._id;
+        }
+
+        models.meal.findOne(criteria, function(err, meal) {
             if (err) {
                 return next(err);
             }
@@ -31,6 +41,13 @@ module.exports = function(config, models) {
             }
         };
 
+        // Only managers and admins can retrieve the meals of any user
+        if (req.user.role <= models.user.roles().ROLE_MANAGER) {
+            criteria.user = req.user._id;
+        } else if (req.query.user) {
+            criteria.user = req.query.user;
+        }
+
         models.meal.find(criteria)
             .skip(offset)
             .limit(limit)
@@ -44,7 +61,17 @@ module.exports = function(config, models) {
 
     router.delete('/:id', function(req, res, next) {
         var id = req.params.id;
-        models.meal.remove({_id: id}, function(err) {
+        var criteria = {
+            _id: id
+        };
+
+        // This makes sure that a regular user is able to delete only his meals but gives ability for
+        // administrators to delete any meal.
+        if (req.user.role <= models.roles.ROLE_MANAGER) {
+            criteria.user = req.user._id;
+        }
+
+        models.meal.remove(criteria, function(err) {
             if (err) {
                 return next(err);
             }
@@ -53,13 +80,33 @@ module.exports = function(config, models) {
     });
 
     router.post('/', function(req, res, next) {
+        if (req.body.user && req.body.user != req.user._id) {
+            // Only managers and admins are allowed to create meals on behalf of other users.
+            if (req.user.role < models.user.roles().ROLE_MANAGER) {
+                return res.sendStatus(401);
+            }
+        }
+
         var data = {
             food: req.body.food,
             dateTime: req.body.dateTime,
             calories: req.body.calories,
-            user: req.user._id
         };
+
+        if (req.user.role !== models.user.roles().ROLE_ADMIN) {
+            // Non-admin users are disallowed to create meals on behalf of other users.
+            if (req.body.user && req.body.user != req.user._id.toString()) {
+                return res.sendStatus(401);
+            } else {
+                data.user = req.user._id;
+            }
+        } else {
+            // Administrators are allowed to add meals on behalf of other users.
+            data.user = req.body.user || req.user._id;
+        }
+
         var meal = new models.meal(data);
+
         meal.save( function(err, m) {
             if (err) {
                 return next(err);
@@ -74,6 +121,17 @@ module.exports = function(config, models) {
             dateTime: req.body.dateTime,
             calories: req.body.calories
         };
+
+        var criteria = {
+            _id: req.params.id
+        };
+
+        // This makes sure that regular and manager users are able to fetch only their meals but gives ability for
+        // administrators to update any meal.
+        if (req.user.role <= models.roles.ROLE_MANAGER) {
+            criteria.user = req.user._id;
+        }
+
         models.meal.update({_id: id, $set: data}, function(err) {
             if (err) {
                 return next(err);
