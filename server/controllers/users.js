@@ -6,7 +6,7 @@ module.exports = function(config, models) {
 
     router.get('/', function(req, res, next) {
         // Only managers and admins can retrieve the full list of users
-        if (req.user.role < models.roles.ROLE_MANAGER) {
+        if (req.user.role < models.user.roles().ROLE_MANAGER) {
             return res.sendStatus(401);
         }
 
@@ -26,7 +26,7 @@ module.exports = function(config, models) {
 
         // This makes sure that a regular user is able to fetch info only from his account but gives ability for
         // managers and administrators to fetch info about any account.
-        if (req.user.role < models.roles.ROLE_MANAGER) {
+        if (req.user.role < models.user.roles().ROLE_MANAGER) {
             criteria.user = req.user._id;
         }
 
@@ -72,7 +72,7 @@ module.exports = function(config, models) {
         })
     });
 
-    router.put('/', function(req, res, next) {
+    router.put('/:id', function(req, res, next) {
         //TODO: Sanitize the relevant input values.
         var data = {
             username: req.body.username,
@@ -81,12 +81,12 @@ module.exports = function(config, models) {
             email: req.body.email
         };
         var criteria = {
-            username: username
+            _id: req.params.id
         };
         // This makes sure that a regular user is able to update only his account but gives ability for
         // managers and administrators to update any account.
-        if (req.user.role < models.roles.ROLE_MANAGER) {
-            criteria.user = req.user._id;
+        if (req.user.role < models.user.roles().ROLE_MANAGER && req.user._id.toString() != criteria._id) {
+            return res.sendStatus(401);
         }
         models.user.update(criteria, {$set: data}, function(err) {
             if (err) {
@@ -105,7 +105,7 @@ module.exports = function(config, models) {
         };
         // This makes sure that a regular user is able to delete only his account but gives ability for
         // managers and administrators to delete any account.
-        if (req.user.role < models.roles.ROLE_MANAGER) {
+        if (req.user.role < models.user.roles().ROLE_MANAGER) {
             criteria.user = req.user._id;
         }
         models.user.remove(criteria, function(err) {

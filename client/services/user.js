@@ -46,7 +46,7 @@
         };
 
         this.updateUser = function(user) {
-            return $http.put('/api/v1/users/' + id, user)
+            return $http.put('/api/v1/users/' + user._id, user)
                 .then(handleSuccess);
         };
 
