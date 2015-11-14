@@ -36,6 +36,26 @@
                 templateUrl: 'partials/home.html',
                 controller: 'HomeController as homeCtrl'
             })
+            .state('settings', {
+                url: '/settings',
+                templateUrl: 'partials/settings.html',
+                controller: 'SettingsController as settingsCtrl'
+            })
+            .state('settings.profile', {
+                url: '/settings/profile',
+                templateUrl: 'partials/profile.html',
+                controller: 'ProfileController as profileCtrl'
+            })
+            .state('admin', {
+                url: '/admin',
+                templateUrl: 'partials/admin.html',
+                controller: 'AdminController as adminCtrl'
+            })
+            .state('admin.profile', {
+                url: '/admin/meals',
+                templateUrl: 'partials/admin.meals.html',
+                controller: 'AdminMealsController as adminMealsCtrl'
+            })
             .state('logout', {
                 url: '/logout',
                 controller: 'LogoutController'
