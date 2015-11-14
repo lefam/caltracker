@@ -6,6 +6,8 @@
     AuthService.$inject = ['$window', '$rootScope', '$http'];
 
     function AuthService($window, $rootScope, $http) {
+        var store = $window.sessionStorage;
+
         this.login = function(username, password) {
             var credentials = {
                 username: username,
@@ -15,8 +17,8 @@
                 .post('/api/v1/auth/login', credentials)
                 .then(function(response) {
                     if( response.data.status === 1 && response.data.token != '' ) {
-                        $window.sessionStorage.setItem("auth_token", response.data.token);
-                        $window.sessionStorage.setItem("user.username", username);
+                        store.setItem("auth_token", response.data.token);
+                        store.setItem("user.username", username);
                     }
                     $rootScope.currentUser = {
                         username: username
@@ -30,19 +32,19 @@
 
         this.logout = function() {
             $rootScope.currentUser = null;
-            $window.sessionStorage.clear();
+            store.clear();
         };
 
         this.isAuthenticated = function() {
-            return $window.sessionStorage.getItem("auth_token");
+            return store.getItem("auth_token");
         };
 
         this.getToken = function() {
-            return $window.sessionStorage.getItem("auth_token");
+            return store.getItem("auth_token");
         };
 
         this.getUsername = function() {
-            return $window.sessionStorage.getItem("user.username");
+            return store.getItem("user.username");
         }
     }
 })();
