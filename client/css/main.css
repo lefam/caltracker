@@ -10,6 +10,10 @@ a {
     text-decoration: none !important;
 }
 
+.main-header nav a {
+    color: #ddd;
+}
+
 .main-header {
     padding: 10px 0;
     padding: 0;
