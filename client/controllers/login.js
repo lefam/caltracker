@@ -11,9 +11,6 @@
         vm.login = function() {
             AuthService.login(vm.username, vm.password)
                 .then( function() {
-                    $rootScope.currentUser = {
-                        username: vm.username
-                    };
                     $state.go('home');
                 })
                 .catch( function() {

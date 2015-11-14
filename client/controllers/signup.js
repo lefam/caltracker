@@ -3,18 +3,24 @@
         .module('app')
         .controller('SignupController', SignupController);
 
-    SignupController.$inject = ['AuthService', 'UserService'];
+    SignupController.$inject = ['$state', 'AuthService', 'UserService'];
 
-    function SignupController(AuthService, UserService) {
+    function SignupController($state, AuthService, UserService) {
         var vm = this;
 
         vm.user = {};
 
         vm.signup = function() {
             UserService
-                .createUser(vm.user.username, vm.user.firstName, vm.user.lastName, vm.user.email, vm.user.password)
+                .createUserForAuth(vm.user.username, vm.user.firstName, vm.user.lastName, vm.user.email, vm.user.password)
                 .then( function(response) {
-                    alert('User created with success!');
+                    AuthService.login(vm.user.username, vm.user.password)
+                        .then( function() {
+                            $state.go('home');
+                        })
+                        .catch( function(response) {
+                            alert(response.data);
+                        });
                 })
                 .catch( function(e) {
                     alert('Failed to create user');

@@ -44,6 +44,27 @@ module.exports = function(config, models) {
         });
     });
 
+    router.post('/signup', function(req, res, next) {
+        //TODO: Sanitize the relevant input values.
+        var data = {
+            username: req.body.username,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: req.body.password
+        };
+        bcrypt.hash(data.password, 10, function(err, hash) {
+            data.password = hash;
+            var m = models.user(data);
+            m.save(function(err, user) {
+                if (err) {
+                    return next(err);
+                }
+                res.status(201).json(user);
+            });
+        })
+    });
+
     router.get('/check-token', function(req, res, next) {
         var token = req.query.token;
         if (token) {

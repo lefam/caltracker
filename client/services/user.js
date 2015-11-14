@@ -24,6 +24,18 @@
             return $http.post('/api/v1/users', user);
         };
 
+        // This method should be used when the client is not authenticated, eg. through a signup form.
+        this.createUserForAuth = function(username, firstName, lastName, email, password) {
+            var user = {
+                username: username,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password
+            };
+            return $http.post('/api/v1/auth/signup', user);
+        };
+
         this.updateUser = function(id, username, firstName, lastName, email, lastPassword, newPassword) {
             var user = {
                 id: id,

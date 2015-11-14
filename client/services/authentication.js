@@ -18,6 +18,9 @@
                         $window.sessionStorage.setItem("auth_token", response.data.token);
                         $window.sessionStorage.setItem("user.username", username);
                     }
+                    $rootScope.currentUser = {
+                        username: username
+                    };
                     //$http.get("/api/v1/me")
                     //    .then( function(response) {
                     //        alert(response.data.firstName + " - this is working!");
