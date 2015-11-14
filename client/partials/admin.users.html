@@ -1,3 +1,45 @@
-<div>
+<div class="sexy">
+    <div>
+        <form ng-submit="signupCtrl.signup()">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input id="username" type="text" ng-model="signupCtrl.user.username">
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input id="firstName" type="text" ng-model="signupCtrl.user.firstName">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input id="lastName" type="text" ng-model="signupCtrl.user.lastName">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" ng-model="signupCtrl.user.password">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="button">Add/Update</button>
+            </div>
+        </form>
+    </div>
+    <table class="table">
+        <thead>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="user in adminUsersCtrl.users">
+                <td>{{user.username}}</td>
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td>
+                    <a href="#" ng-click="adminUsersCtrl.showUserEditForm(user)">Edit</a>
 
+                    <a href="#" ng-click="adminUsersCtrl.removeUser(user._id)">Remove</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

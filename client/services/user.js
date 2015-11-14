@@ -15,6 +15,11 @@
                 .then(handleSuccess);
         };
 
+        this.getUsers = function() {
+            return $http.get('/api/v1/users')
+                .then(handleSuccess);
+        }
+
         this.getById = function(id) {
             return $http.get('/api/v1/users/' + id)
                 .then( function(response) {
