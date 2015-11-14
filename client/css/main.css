@@ -42,13 +42,23 @@ a.logo {
     padding: 0;
 }
 
+.width-50 {
+    width: 50px !important;
+}
+
+.width-75 {
+    width: 75px !important;
+}
+
 .login-box,
 .signup-box {
     max-width: 400px;
     margin: 50px auto;
 }
 
-.login-box form, .signup-box form {
+.login-box form,
+.signup-box form,
+.sexy form {
     background-color: #fff;
     padding: 15px 17px;
     border-radius: 3px;
@@ -60,7 +70,8 @@ a.logo {
 }
 
 .login-box input,
-.signup-box input {
+.signup-box input,
+.sexy input {
     display: block;
     width: 100%;
     outline: none;
@@ -68,6 +79,10 @@ a.logo {
     padding: 10px;
     border: 2px solid #ddd;
     border-radius: 3px;
+}
+
+.sexy input {
+    max-width: 400px;
 }
 
 .button {
@@ -86,6 +101,12 @@ a.logo {
 
 .meal-box {
     max-width: 700px;
+}
+
+.sexy {
+    background-color: #fff;
+    color: #666;
+    min-height: 100px;
 }
 
 .vertical-padding-10 {

@@ -1,6 +1,9 @@
-<div>
-    <form ng-submit="settingsMealCtrl.update()">
-        <input type="text" placeholder="Max daily calories">
-        <button type="submit">Update</button>
+<div class="sexy">
+    <form ng-submit="settingsMealsCtrl.update()">
+        <div class="form-group">
+            <label>Max Calories Per Day:</label>
+            <input type="text" class="width-75" ng-model="settingsMealsCtrl.maxDailyCalories">
+        </div>
+        <button type="submit" class="button">Update</button>
     </form>
 </div>

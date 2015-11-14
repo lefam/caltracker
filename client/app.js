@@ -49,7 +49,7 @@
             .state('settings.profile', {
                 url: '/settings/profile',
                 templateUrl: 'partials/settings.profile.html',
-                controller: 'ProfileController as profileCtrl'
+                controller: 'ProfileController as settingsProfileCtrl'
             })
             .state('settings.security', {
                 url: '/settings/security',

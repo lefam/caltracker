@@ -6,6 +6,15 @@
     UserService.$inject = ['$http'];
 
     function UserService($http) {
+        function handleSuccess(response) {
+            return response.data;
+        };
+
+        this.getCurrentUser = function() {
+            return $http.get('/api/v1/me')
+                .then(handleSuccess);
+        };
+
         this.getById = function(id) {
             return $http.get('/api/v1/users/' + id)
                 .then( function(response) {
@@ -36,21 +45,14 @@
             return $http.post('/api/v1/auth/signup', user);
         };
 
-        this.updateUser = function(id, username, firstName, lastName, email, lastPassword, newPassword) {
-            var user = {
-                id: id,
-                username: username,
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                lastPassword: lastPassword,
-                newPassword: newPassword
-            };
-            return $http.put('/api/v1/users/' + id, user);
+        this.updateUser = function(user) {
+            return $http.put('/api/v1/users/' + id, user)
+                .then(handleSuccess);
         };
 
         this.deleteUser = function(userId) {
-            return $http.delete('/api/v1/users/' + userId);
+            return $http.delete('/api/v1/users/' + userId)
+                .then(handleSuccess);
         };
 
         this.setMaxCaloriesPerDay = function(userId, calories) {
