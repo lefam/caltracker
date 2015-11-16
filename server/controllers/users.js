@@ -14,6 +14,10 @@ module.exports = function(config, models) {
             if (err) {
                 return next(err);
             }
+            users.forEach( function(u) {
+                u.password = null;
+                delete u.password;
+            });
             res.json(users);
         })
     });
@@ -35,6 +39,7 @@ module.exports = function(config, models) {
                 return next(err);
             }
             if (user) {
+                delete user.password;
                 res.json(user);
             } else {
                 res.sendStatus(404);
@@ -69,7 +74,7 @@ module.exports = function(config, models) {
                 }
                 res.status(201).json(user);
             });
-        })
+        });
     });
 
     router.put('/:id', function(req, res, next) {
@@ -78,7 +83,9 @@ module.exports = function(config, models) {
             username: req.body.username,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            email: req.body.email
+            email: req.body.email,
+            password: req.body.password,
+            role: req.body.role
         };
         var criteria = {
             _id: req.params.id
@@ -88,14 +95,33 @@ module.exports = function(config, models) {
         if (req.user.role < models.user.roles().ROLE_MANAGER && req.user._id.toString() != criteria._id) {
             return res.sendStatus(401);
         }
-        models.user.update(criteria, {$set: data}, function(err) {
-            if (err) {
-                return next(err);
+
+        if (req.user.role > models.user.roles().ROLE_NORMAL) {
+            // The owner of the API token is not allowed to create users with roles that are greater than his own.
+            if (data.role > req.user.role) {
+                res.sendStatus(401);
             }
-            res.json({
-                status: 1
+        }
+
+        if (data.password) {
+            bcrypt.hash(data.password, 10, function(err, hash) {
+                data.password = hash;
+                models.user.update(criteria, {$set: data}, function(err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.sendStatus(200);
+                });
             });
-        });
+        } else {
+            delete data.password;
+            models.user.update(criteria, {$set: data}, function(err) {
+                if (err) {
+                    return next(err);
+                }
+                res.sendStatus(200);
+            });
+        }
     });
 
     router.delete('/:id', function(req, res, next) {

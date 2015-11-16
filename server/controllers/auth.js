@@ -32,10 +32,12 @@ module.exports = function(config, models) {
                 }
                 if (isEqual) {
                     var token = generateToken(username, 30);
+                    delete user.password;
                     res.json({
                         status: 1,
                         token: token,
-                        expiresInMinutes: daysToMinutes(30)
+                        expiresInMinutes: daysToMinutes(30),
+                        user: user
                     });
                 } else {
                     res.sendStatus(404);

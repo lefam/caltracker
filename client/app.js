@@ -80,9 +80,7 @@
 
     function runBlock($rootScope, $state, AuthService) {
         if (AuthService.isAuthenticated()) {
-            $rootScope.currentUser = {
-                username: AuthService.getUsername()
-            };
+            $rootScope.currentUser = AuthService.getUser();
         }
 
         $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {

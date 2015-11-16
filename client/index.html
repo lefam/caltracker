@@ -19,7 +19,7 @@
                     <ul class="nav nav-pills">
                         <li ui-sref-active="active"><a ui-sref="home">Dashboard</a></li>
                         <li ui-sref-active="active"><a ui-sref="settings">Settings</a></li>
-                        <li ui-sref-active="active"><a ui-sref="admin">Administration</a></li>
+                        <li ng-hide="currentUser.role === 0" ui-sref-active="active"><a ui-sref="admin">Administration</a></li>
                         <li ui-sref-active="active"><a ui-sref="logout">Logout</a></li>
                     </ul>
                 </nav>
@@ -30,7 +30,9 @@
         </div>
         <script src="/vendor/angular-ui-router/angular-ui-router.min.js"></script>
         <script src="app.js"></script>
-        <script src="services/authentication.js"></script>
+        <script src="directives/ctmodal.js"></script>
+        <script src="services/modal.js"></script>
+        <script src="services/auth.js"></script>
         <script src="services/user.js"></script>
         <script src="services/meal.js"></script>
         <script src="services/auth_interceptor.js"></script>

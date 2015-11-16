@@ -81,8 +81,13 @@ a.logo {
     border-radius: 3px;
 }
 
+.sexy select {
+    display: block;
+}
+
 .sexy input {
     max-width: 400px;
+    font-size: 18px;
 }
 
 .button {
@@ -107,6 +112,7 @@ a.logo {
     background-color: #fff;
     color: #666;
     min-height: 100px;
+    padding: 5px;
 }
 
 .vertical-padding-10 {
@@ -135,4 +141,26 @@ main {
 
 .form-meal {
     padding: 10px 0;
+}
+
+.ct-modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 5000;
+}
+
+.ct-modal-closed {
+    display: none;
+}
+
+.modal-child {
+    background-color: #fff;
+    opacity: 1;
+    z-index: 6000;
+    max-width: 400px;
+    margin: 20px auto;
 }

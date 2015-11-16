@@ -27,15 +27,17 @@
                 });
         };
 
-        this.createUser = function(username, firstName, lastName, email, password) {
+        this.createUser = function(username, firstName, lastName, email, password, role) {
             var user = {
                 username: username,
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
-                password: password
+                password: password,
+                role: role
             };
-            return $http.post('/api/v1/users', user);
+            return $http.post('/api/v1/users', user)
+                .then(handleSuccess);
         };
 
         // This method should be used when the client is not authenticated, eg. through a signup form.
@@ -61,7 +63,8 @@
         };
 
         this.setMaxCaloriesPerDay = function(userId, calories) {
-            return $http.put('/api/v1/users/' + userId + '/max_daily_calories', {calories: calories});
+            return $http.put('/api/v1/users/' + userId + '/max_daily_calories', {calories: calories})
+                .then(handleSuccess);
         };
     }
 })();
