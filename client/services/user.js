@@ -27,6 +27,11 @@
                 });
         };
 
+        this.getByUsername = function(username) {
+            return $http.get('/api/v1/identity/users/' + username)
+                .then(handleSuccess);
+        };
+
         this.createUser = function(username, firstName, lastName, email, password, role) {
             var user = {
                 username: username,

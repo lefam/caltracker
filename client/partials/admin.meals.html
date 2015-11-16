@@ -1,3 +1,57 @@
 <div class="sexy">
+    <button class="btn btn-primary" ng-click="adminMealsCtrl.showMealAddForm()">Add Meal</button>
+    <div>
+        <ct-modal>
+            <div class="modal-child">
+                <form ng-submit="signupCtrl.signup()">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input id="username" type="text" ng-model="adminMealsCtrl.meal.user.username">
+                    </div>
+                    <div class="form-group">
+                        <label for="food">Food</label>
+                        <input id="food" type="text" ng-model="adminMealsCtrl.meal.food">
+                    </div>
+                    <div class="form-group">
+                        <label for="calories">Calories</label>
+                        <input id="calories" type="text" ng-model="adminMealsCtrl.meal.calories">
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input id="date" type="text" ng-model="adminMealsCtrl.meal.date">
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <input id="time" type="text" ng-model="adminMealsCtrl.meal.time">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="button" ng-click="adminMealsCtrl.addOrUpdateMeal()">Add/Update</button>
+                        <a href="" ng-click="adminMealsCtrl.closeModal()">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </ct-modal>
+    </div>
+    <table class="table">
+        <thead>
+        <th>Username</th>
+        <th>Food</th>
+        <th>Calories</th>
+        <th>When</th>
+        <th>Actions</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="meal in adminMealsCtrl.meals">
+            <td>{{meal.user.username}}</td>
+            <td>{{meal.food}}</td>
+            <td>{{meal.calories}}</td>
+            <td>{{meal.dateTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>
+                <a href="#" ng-click="adminMealsCtrl.showMealEditForm(meal)">Edit</a>
 
+                <a href="#" ng-click="adminMealsCtrl.removeMeal(meal._id)">Remove</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>

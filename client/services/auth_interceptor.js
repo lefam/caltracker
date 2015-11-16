@@ -24,7 +24,7 @@
             if (response.status === 400 || response.status == 401) {
                 $rootScope.$broadcast('unauthorized');
             }
-            return response;
+            return $q.reject(response);
         }
     }
 })();

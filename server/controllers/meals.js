@@ -30,6 +30,7 @@ module.exports = function(config, models) {
         var offset = Number(req.query.offset) || 0;
         var fromDateTime = Number(req.query.fromDateTime) || (Date.now() - 30 * 24 * 60 * 60 * 1000);
         var toDateTime = Number(req.query.toDateTime) || Date.now();
+        var fetchAll = req.query.all === "1";
 
         fromDateTime = new Date(fromDateTime);
         toDateTime = new Date(toDateTime);
@@ -41,16 +42,25 @@ module.exports = function(config, models) {
             }
         };
 
-        // Only managers and admins can retrieve the meals of any user
-        if (req.user.role <= models.user.roles().ROLE_MANAGER) {
-            criteria.user = req.user._id;
+        // Only admins can retrieve the meals of any user
+        if (fetchAll) {
+            if (req.user.role <= models.user.roles().ROLE_MANAGER) {
+                return res.sendStatus(401);
+            }
         } else if (req.query.user) {
-            criteria.user = req.query.user;
+            if (req.user.role <= models.user.roles().ROLE_MANAGER) {
+                return res.sendStatus(401);
+            } else {
+                criteria.user = req.query.user;
+            }
+        } else {
+            criteria.user = req.user._id;
         }
 
         models.meal.find(criteria)
             .skip(offset)
             .limit(limit)
+            .populate('user')
             .exec( function(err, meals) {
                 if (err) {
                     return next(err);
@@ -119,7 +129,8 @@ module.exports = function(config, models) {
         var data = {
             food: req.body.food,
             dateTime: req.body.dateTime,
-            calories: req.body.calories
+            calories: req.body.calories,
+            user: req.body.user || req.user._id
         };
 
         var criteria = {
