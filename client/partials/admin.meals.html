@@ -18,11 +18,11 @@
                     </div>
                     <div class="form-group">
                         <label for="date">Date</label>
-                        <input id="date" type="text" ng-model="adminMealsCtrl.meal.date">
+                        <input id="date" type="text" ct-date-picker ng-model="adminMealsCtrl.meal.date">
                     </div>
                     <div class="form-group">
                         <label for="time">Time</label>
-                        <input id="time" type="text" ng-model="adminMealsCtrl.meal.time">
+                        <input id="time" type="text" ct-time-picker ng-model="adminMealsCtrl.meal.time">
                     </div>
                     <div class="form-group">
                         <button type="submit" class="button">Add/Update</button>
@@ -31,6 +31,15 @@
                 </form>
             </div>
         </ct-modal>
+    </div>
+    <div class="meal-filter">
+        From
+        <input type="text" ct-date-picker ng-model="adminMealsCtrl.filter.dateFrom" data-value="2015/04/20">
+        <input type="text" ct-time-picker ng-model="adminMealsCtrl.filter.timeFrom">
+        To
+        <input type="text" ct-date-picker ng-model="adminMealsCtrl.filter.dateTo">
+        <input type="text" ct-time-picker ng-model="adminMealsCtrl.filter.timeTo">
+        <button class="btn btn-primary" ng-click="adminMealsCtrl.applyFilter()">Filter</button>
     </div>
     <table class="table">
         <thead>

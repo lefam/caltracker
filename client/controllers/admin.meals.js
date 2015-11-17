@@ -3,11 +3,18 @@
         .module('app')
         .controller('AdminMealsController', AdminMealsController);
 
-    AdminMealsController.$inject = ['AuthService', 'UserService' , 'MealService', 'ModalService'];
+    AdminMealsController.$inject = ['AuthService', 'UserService' , 'MealService', 'ModalService', 'DateService'];
 
-    function AdminMealsController(AuthService, UserService, MealService, ModalService) {
+    function AdminMealsController(AuthService, UserService, MealService, ModalService, DateService) {
         var vm = this;
         vm.isEditing = false;
+
+        vm.filter = {
+            dateFrom: DateService.formatDate(new Date()),
+            timeFrom: '00:00 AM',
+            dateTo: DateService.formatDate(new Date()),
+            timeTo: '11:59 PM'
+        };
 
         MealService.getAllTodayMeals()
             .then( function(meals) {
@@ -15,6 +22,18 @@
                 vm.meals = meals;
             });
 
+
+        this.applyFilter = function() {
+            var from = new Date(this.filter.dateFrom + " " + this.filter.timeFrom);
+            var to = new Date(this.filter.dateTo + " " + this.filter.timeTo);
+            MealService.getMeals(from, to, 1)
+                .then( function(meals) {
+                    vm.meals = meals;
+                    meals.forEach( function(m) {
+                        //vm.todayCalories += m.calories;
+                    });
+                });
+        };
 
         this.closeModal = function() {
             this.isEditing = false;
@@ -25,13 +44,16 @@
             vm.isEditing = true;
             vm.meal = meal;
             var d = new Date(meal.dateTime);
-            vm.meal.date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
-            vm.meal.time = d.toLocaleTimeString();
+            vm.meal.date = DateService.formatDate(d);
+            vm.meal.time = DateService.formatTime(d);
             ModalService.open();
         };
 
         this.showMealAddForm = function() {
             vm.meal = {};
+            var d = new Date();
+            vm.meal.date = DateService.formatDate(d);
+            vm.meal.time = DateService.formatTime(d);
             ModalService.open();
         };
 
