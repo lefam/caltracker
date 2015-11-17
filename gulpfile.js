@@ -9,6 +9,12 @@ gulp.task('vendor', function vendorTask() {
 
     gulp.src(['client/vendor/angular-ui-router/release/angular-ui-router.min.js'])
         .pipe(gulp.dest('public/vendor/angular-ui-router/'));
+
+    gulp.src(['client/vendor/pickadate/lib/**/*'])
+        .pipe(gulp.dest('public/vendor/pickadate/'));
+
+    gulp.src(['client/vendor/jquery/dist/**/*'])
+        .pipe(gulp.dest('public/vendor/jquery/'));
 });
 
 gulp.task('client', function clientTask() {

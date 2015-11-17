@@ -112,7 +112,7 @@ a.logo {
     background-color: #fff;
     color: #666;
     min-height: 100px;
-    padding: 5px;
+    padding: 10px;
 }
 
 .vertical-padding-10 {
@@ -141,6 +141,17 @@ main {
 
 .form-meal {
     padding: 10px 0;
+}
+
+.meal-filter {
+    padding: 20px 0;
+}
+
+.meal-filter input {
+    display: inline;
+    width: 140px;
+    padding: 5px;
+    font-size: 14px;
 }
 
 .ct-modal {

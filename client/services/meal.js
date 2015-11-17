@@ -31,11 +31,11 @@
             return this.getMeals(todayBegin, now, 1);
         };
 
-        this.addMeal = function(food, calories, dateTime) {
+        this.addMeal = function(food, calories, date, time) {
             var data = {
                 food: food,
                 calories: calories,
-                dateTime: dateTime
+                dateTime: date + " " + time
             };
             return $http
                 .post('/api/v1/meals', data)
@@ -55,11 +55,13 @@
         };
 
         this.updateMeal = function(meal) {
-            meal.dateTime = meal.date + " " + meal.time;
-            delete meal.date;
-            delete meal.time;
+            var data = {
+                food: meal.food,
+                calories: meal.calories,
+                dateTime: meal.date + " " + meal.time
+            };
             return $http
-                .put('/api/v1/meals/' + meal._id, meal)
+                .put('/api/v1/meals/' + meal._id, data)
                 .then(handleSuccess);
         };
 

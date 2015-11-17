@@ -3,15 +3,22 @@
         .module('app')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['MealService'];
+    HomeController.$inject = ['MealService', 'ModalService', 'DateService'];
 
-    function HomeController(MealService) {
+    function HomeController(MealService, ModalService, DateService) {
         var vm = this;
         vm.meals = [];
         vm.meal = {};
         vm.formToggleText = "Add Meal";
         vm.isMealFormVisible = false;
         vm.isEditingMeal = false;
+
+        vm.filter = {
+            dateFrom: DateService.formatDate(new Date()),
+            timeFrom: '00:00 AM',
+            dateTo: DateService.formatDate(new Date()),
+            timeTo: '11:59 PM'
+        };
 
         MealService.getTodayMeals()
             .then( function(meals) {
@@ -22,54 +29,66 @@
                 });
             });
 
-        this.toggleMealForm = function() {
-            vm.isMealFormVisible = !vm.isMealFormVisible;
-            if (vm.isMealFormVisible) {
-                if (vm.isEditingMeal) {
-
-                } else {
-                    vm.meal = {
-                        dateTime: new Date()
-                    }
-                }
-            } else {
-                vm.isEditingMeal = false;
-            }
+        this.applyFilter = function() {
+            var from = new Date(this.filter.dateFrom + " " + this.filter.timeFrom);
+            var to = new Date(this.filter.dateTo + " " + this.filter.timeTo);
+            MealService.getMeals(from, to)
+                .then( function(meals) {
+                    vm.meals = meals;
+                    meals.forEach( function(m) {
+                        //vm.todayCalories += m.calories;
+                    });
+                });
         };
 
-        this.addMeal = function() {
-            if (vm.isEditingMeal) {
-                MealService
-                    .updateMeal(vm.meal)
-                    .then( function(response) {
-                        vm.toggleMealForm();
-                    })
-                    .catch( function(response) {
-                        alert('Failed to add meal!');
-                    });
-            } else {
-                MealService
-                    .addMeal(vm.meal.food, vm.meal.calories, vm.meal.dateTime)
-                    .then( function(meal) {
-                        vm.meals.push(meal);
-                        vm.toggleMealForm();
-                    })
-                    .catch( function(response) {
-                        alert('Failed to add meal!');
-                    });
-            }
+        this.closeModal = function() {
+            this.isEditing = false;
+            ModalService.close();
+        };
+
+        this.showMealAddForm = function() {
+            vm.meal = {};
+            var d = new Date();
+            vm.meal.date = DateService.formatDate(d);
+            vm.meal.time = DateService.formatTime(d);
+            ModalService.open();
         };
 
         this.showMealEditForm = function(meal) {
-            vm.isEditingMeal = true;
+            vm.isEditing = true;
             vm.meal = meal;
-            vm.toggleMealForm();
+            var d = new Date(meal.dateTime);
+            vm.meal.date = DateService.formatDate(d);
+            vm.meal.time = DateService.formatTime(d);
+            ModalService.open();
+        };
+
+        this.addOrUpdateMeal = function() {
+            var m = vm.meal;
+            if (vm.isEditing) {
+                MealService.updateMeal(m)
+                    .then( function() {
+                        vm.closeModal();
+                    })
+                    .catch( function() {
+                        alert('Failed to save!');
+                    });
+            } else {
+                MealService.addMeal(m.food, m.calories, m.date, m.time)
+                    .then( function(meal) {
+                        vm.closeModal();
+                        vm.meals.push(meal);
+                    })
+                    .catch( function(response) {
+                        alert('Failed to save!');
+                    });
+            }
         };
 
         this.removeMeal = function(id) {
             if (confirm("Are you sure you want to remove this meal?")) {
                 MealService
-                    .removeMeal(id)
+                    .deleteMeal(id)
                     .then( function() {
                         vm.meals = vm.meals.filter(function(t) {
                             return t._id !== id
