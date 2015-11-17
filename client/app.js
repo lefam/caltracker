@@ -40,6 +40,7 @@
             .state('settings', {
                 url: '/settings',
                 templateUrl: 'partials/settings.html',
+                redirectTo: "settings.meals"
             })
             .state('settings.meals', {
                 url: '/settings/meals',
@@ -59,6 +60,7 @@
             .state('admin', {
                 url: '/admin',
                 templateUrl: 'partials/admin.html',
+                redirectTo: "admin.users"
             })
             .state('admin.users', {
                 url: '/admin/users',
@@ -84,7 +86,11 @@
         }
 
         $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-            if (AuthService.isAuthenticated()) {
+            if (toState.redirectTo) {
+                event.preventDefault();
+                $state.go(toState.redirectTo);
+            }
+            else if (AuthService.isAuthenticated()) {
                 // If the user is already authenticated we will not show login and signup screens.
                 // We redirect him to the home screen, instead!
                 if (["signup", "login"].indexOf(toState.name) != -1) {
