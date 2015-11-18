@@ -4,6 +4,7 @@ var config = require('./config'),
 	mongoose = require('mongoose'),
 	models = require('./models'),
     bodyParser = require('body-parser'),
+    expressValidator = require("express-validator"),
 	apiMiddleware = require('./middlewares/api'),
 	apiRoutes = require('./controllers');
 
@@ -15,6 +16,7 @@ var app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(expressValidator());
 app.use('/api/v1/', apiMiddleware(config, models));
 app.use('/api/v1', apiRoutes(config, models));
 

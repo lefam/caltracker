@@ -57,4 +57,41 @@ describe("Authentication API", function() {
                 .expect(401, done);
         });
     });
+
+    describe("POST /auth/signup", function() {
+        it("should return 403 when username is empty", function(done) {
+            request(app)
+                .post('/api/v1/auth/signup')
+                .send({username: '', password: '123456789', firstName: 'Abdul', lastName: 'Abudo'})
+                .expect(403, done);
+        });
+
+        it("should return 403 when username is less than 3 characters", function(done) {
+            request(app)
+                .post('/api/v1/auth/signup')
+                .send({username: 'ab', password: '123456789', firstName: 'Abdul', lastName: 'Abudo'})
+                .expect(403, done);
+        });
+
+        it("should return 403 when password is less than 6 characters", function(done) {
+            request(app)
+                .post('/api/v1/auth/signup')
+                .send({username: 'abdul', password: '1234', firstName: 'Abdul', lastName: 'Abudo'})
+                .expect(403, done);
+        });
+
+        it("should return 403 when user's first name is empty", function(done) {
+            request(app)
+                .post('/api/v1/auth/signup')
+                .send({username: 'abdul', password: '123456789', firstName: '', lastName: 'Abudo'})
+                .expect(403, done);
+        });
+
+        it("should return 403 when user' last name is empty", function(done) {
+            request(app)
+                .post('/api/v1/auth/signup')
+                .send({username: 'abdul', password: '123456789', firstName: '', lastName: ''})
+                .expect(403, done);
+        });
+    })
 });

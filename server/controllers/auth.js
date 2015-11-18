@@ -12,7 +12,7 @@ module.exports = function(config, models) {
 
     function generateToken(username, validDays) {
         return jwt.sign({username: username}, config.TOKEN_SIGN_SECRET, {
-            expiresInMinutes: daysToMinutes(validDays)
+            expiresIn: daysToMinutes(validDays) * 60
         });
     }
 
@@ -47,7 +47,15 @@ module.exports = function(config, models) {
     });
 
     router.post('/signup', function(req, res, next) {
-        //TODO: Sanitize the relevant input values.
+        req.checkBody('username').notEmpty().len(3, 20);
+        req.checkBody('password').notEmpty().len(7);
+        req.checkBody('firstName').notEmpty();
+        req.checkBody('lastName').notEmpty();
+
+        if (req.validationErrors()) {
+            return res.sendStatus(403);
+        }
+
         var data = {
             username: req.body.username,
             firstName: req.body.firstName,
