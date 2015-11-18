@@ -26,15 +26,14 @@ var testUsers = [
 ];
 
 describe("Authentication API", function() {
+    beforeEach( function(done) {
+        models.user.remove({})
+            .then( function() {
+                models.user.create(testUsers);
+            })
+            .then(done);
+    });
     describe("POST /auth/login", function() {
-        beforeEach( function(done) {
-            models.user.remove({})
-                .then( function() {
-                    models.user.create(testUsers);
-                })
-                .then(done);
-        });
-
         it("should return a token when correct credentials are given", function(done) {
             request(app)
                 .post('/api/v1/auth/login')
