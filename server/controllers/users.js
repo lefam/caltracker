@@ -36,8 +36,8 @@ module.exports = function(config, models) {
 
         // This makes sure that a regular user is able to fetch info only from his account but gives ability for
         // managers and administrators to fetch info about any account.
-        if (req.user.role < models.user.roles().ROLE_MANAGER) {
-            criteria.user = req.user._id;
+        if (req.user.role < models.user.roles().ROLE_MANAGER && req.user._id != id) {
+            res.sendStatus(401);
         }
 
         models.user.findOne(criteria, function(err, user) {
@@ -54,7 +54,21 @@ module.exports = function(config, models) {
     });
 
     router.post('/', function(req, res, next) {
-        //TODO: Sanitize the relevant input values.
+        // Normal users should not use this endpoint to create users. This is reserved for managers and admins.
+        // Normal users should create users through the /auth/signup endpoint
+        if (req.user.role === models.user.roles().ROLE_NORMAL) {
+            return res.sendStatus(401);
+        }
+
+        req.checkBody('username').notEmpty().len(3, 20);
+        req.checkBody('password').notEmpty().len(7);
+        req.checkBody('firstName').notEmpty();
+        req.checkBody('lastName').notEmpty();
+
+        if (req.validationErrors()) {
+            return res.sendStatus(403);
+        }
+
         var data = {
             username: req.body.username,
             firstName: req.body.firstName,
@@ -64,22 +78,29 @@ module.exports = function(config, models) {
             role: Number(req.body.role) || 0
         };
 
-        if (req.user.role > models.user.roles().ROLE_NORMAL) {
-            // The owner of the API token is not allowed to create users with roles that are greater than his own.
-            if (data.role > req.user.role) {
-                res.sendStatus(401);
-            }
+        // The owner of the API token is not allowed to create users with roles that are greater than his own.
+        if (data.role > req.user.role) {
+            res.sendStatus(401);
         }
 
-        bcrypt.hash(data.password, 10, function(err, hash) {
-            data.password = hash;
-            var m = models.user(data);
-            m.save(function(err, user) {
-                if (err) {
-                    return next(err);
-                }
-                res.status(201).json(user);
-            });
+        models.user.findOne({username: data.username}, function(err, user) {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                bcrypt.hash(data.password, 10, function(err, hash) {
+                    data.password = hash;
+                    var m = models.user(data);
+                    m.save(function(err, user) {
+                        if (err) {
+                            return next(err);
+                        }
+                        res.status(201).json(user);
+                    });
+                });
+            } else {
+                res.sendStatus(403);
+            }
         });
     });
 
