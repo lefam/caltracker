@@ -1,5 +1,6 @@
 var express = require('express'),
     bcrypt = require('bcrypt'),
+    mongoose = require('mongoose'),
     router = express.Router();
 
 module.exports = function(config, models) {
@@ -24,6 +25,11 @@ module.exports = function(config, models) {
 
     router.get('/:id', function(req, res, next) {
         var id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.sendStatus(404);
+        }
+
         var criteria = {
             _id: id
         };

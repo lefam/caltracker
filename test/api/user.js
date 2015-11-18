@@ -34,7 +34,11 @@ function getToken(username, password, cb) {
         .send({username: username, password: password})
         .end( function(err, res) {
             if (err) return cb(err);
-            cb(null, res.body.token);
+            var data = {
+                token: res.body.token,
+                id: res.body.user._id
+            };
+            cb(null, data);
         });
 }
 
@@ -46,16 +50,20 @@ describe("Users API", function() {
                 models.user.create(testUsers);
             })
             .then( function() {
-                getToken("leonel", "1234567", function(err, token) {
+                //TODO: Use async library or promises to reduce this callback hell.
+                getToken("leonel", "1234567", function(err, data) {
                     if (err) return done(err);
-                    tokenAdmin = token;
+                    tokenAdmin = data.token;
+                    idAdmin = data.id;
 
-                    getToken("ana", "abcdefg", function(err, token) {
+                    getToken("ana", "abcdefg", function(err, data) {
                         if (err) return done(err);
-                        tokenManager = token;
+                        tokenManager = data.token;
+                        idManager = data.id;
 
-                        getToken("joao", "abc1234", function(err, token) {
-                            tokenNormal = token;
+                        getToken("joao", "abc1234", function(err, data) {
+                            tokenNormal = data.token;
+                            idNormal = data.id;
                             done();
                         });
                     });
@@ -108,6 +116,42 @@ describe("Users API", function() {
         });
 
         it.skip("should limit users when given a limit in query string", function(done) {
+        });
+    });
+
+    describe("GET /users/:id", function() {
+        it("should return 401 when an invalid token is given", function(done) {
+            request(app)
+                .get("/api/v1/users")
+                .set("X-Access-Token", "invalid")
+                .set("Accept", "application/json")
+                .expect(401, done);
+        });
+        it("should return 401 when given a normal user token", function(done) {
+            request(app)
+                .get("/api/v1/users")
+                .set("X-Access-Token", tokenNormal)
+                .set("Accept", "application/json")
+                .expect(401, done);
+        });
+        it("should return the right user when given user id is valid", function(done) {
+            request(app)
+                .get("/api/v1/users/" + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .set("Accept", "application/json")
+                .expect(200)
+                .end( function(err, res) {
+                    if (err) return done(err);
+                    expect(res.body.username).to.equal('joao');
+                    done();
+                });
+        });
+        it("should return 404 when the given user id is invalid", function(done) {
+            request(app)
+                .get("/api/v1/users/123")
+                .set("X-Access-Token", tokenAdmin)
+                .set("Accept", "application/json")
+                .expect(404, done);
         });
     });
 });
