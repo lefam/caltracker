@@ -339,4 +339,46 @@ describe("Users API", function() {
                 .expect(403, done);
         });
     });
+
+    describe("DELETE /users/:id", function() {
+        it("should return 401 when an invalid token is given", function (done) {
+            request(app)
+                .delete("/api/v1/users/" + idNormal)
+                .set("X-Access-Token", "invalid")
+                .set("Accept", "application/json")
+                .expect(401, done);
+        });
+
+        it("should delete a user when given a normal user token and the user is the owner of the token", function(done) {
+            request(app)
+                .delete("/api/v1/users/" + idNormal)
+                .set("X-Access-Token", tokenNormal)
+                .set("Accept", "application/json")
+                .expect(200, done)
+        });
+
+        it("should return 401 when normal user token tries to delete a different user", function(done) {
+            request(app)
+                .delete("/api/v1/users/" + idManager)
+                .set("X-Access-Token", tokenNormal)
+                .set("Accept", "application/json")
+                .expect(401, done)
+        });
+
+        it("should return 401 when manager user token tries to delete an admin user", function(done) {
+            request(app)
+                .delete("/api/v1/users/" + idAdmin)
+                .set("X-Access-Token", tokenManager)
+                .set("Accept", "application/json")
+                .expect(401, done)
+        });
+
+        it("should return 404 when the user id is invalid", function(done) {
+            request(app)
+                .delete("/api/v1/users/invalid")
+                .set("X-Access-Token", tokenAdmin)
+                .set("Accept", "application/json")
+                .expect(404, done)
+        });
+    });
 });

@@ -105,6 +105,12 @@ module.exports = function(config, models) {
     });
 
     router.put('/:id', function(req, res, next) {
+        var id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.sendStatus(404);
+        }
+
         req.checkBody('username').notEmpty().len(3, 20);
         req.checkBody('password').notEmpty().len(7);
         req.checkBody('firstName').notEmpty();
@@ -138,7 +144,7 @@ module.exports = function(config, models) {
         }
 
         var criteria = {
-            _id: req.params.id
+            _id: id
         };
 
         models.user.findOne({username: data.username}, function(err, user) {
@@ -174,19 +180,36 @@ module.exports = function(config, models) {
 
     router.delete('/:id', function(req, res, next) {
         var id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.sendStatus(404);
+        }
+
         var criteria = {
             _id: id
         };
         // This makes sure that a regular user is able to delete only his account but gives ability for
         // managers and administrators to delete any account.
-        if (req.user.role < models.user.roles().ROLE_MANAGER) {
-            criteria.user = req.user._id;
+        if (req.user.role === models.user.roles().ROLE_MANAGER && req.user._id.toString() !== criteria._id) {
+            return res.sendStatus(401);
         }
-        models.user.remove(criteria, function(err) {
-            if(err) {
+
+        models.user.findOne(criteria, function(err, user) {
+            if (err) {
                 return next(err);
             }
-            res.sendStatus(200);
+            if (!user) {
+                return res.sendStatus(404);
+            }
+            if (req.user.role < user.role) {
+                return res.sendStatus(401);
+            }
+            models.user.remove(criteria, function(err) {
+                if(err) {
+                    return next(err);
+                }
+                res.sendStatus(200);
+            });
         });
     });
 
