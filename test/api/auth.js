@@ -87,11 +87,25 @@ describe("Authentication API", function() {
                 .expect(403, done);
         });
 
-        it("should return 403 when user' last name is empty", function(done) {
+        it("should return 403 when user's last name is empty", function(done) {
             request(app)
                 .post('/api/v1/auth/signup')
                 .send({username: 'abdul', password: '123456789', firstName: '', lastName: ''})
                 .expect(403, done);
         });
-    })
+
+        it("should return 403 when user with same name already exists", function(done) {
+            request(app)
+                .post('/api/v1/auth/signup')
+                .send({username: 'leonel', password: '123456789', firstName: 'Abdul', lastName: 'Abudo'})
+                .expect(403, done);
+        });
+
+        it("should return 201 when a user is created", function(done) {
+            request(app)
+                .post('/api/v1/auth/signup')
+                .send({username: 'abdul', password: '123456789', firstName: 'Abdul', lastName: 'Abudo'})
+                .expect(201, done);
+        });
+    });
 });

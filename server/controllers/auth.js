@@ -64,16 +64,26 @@ module.exports = function(config, models) {
             password: req.body.password,
             role: 0
         };
-        bcrypt.hash(data.password, 10, function(err, hash) {
-            data.password = hash;
-            var m = models.user(data);
-            m.save(function(err, user) {
-                if (err) {
-                    return next(err);
-                }
-                res.status(201).json(user);
-            });
-        })
+
+        models.user.findOne({username: data.username}, function(err, user) {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                bcrypt.hash(data.password, 10, function(err, hash) {
+                    data.password = hash;
+                    var m = models.user(data);
+                    m.save(function(err, user) {
+                        if (err) {
+                            return next(err);
+                        }
+                        res.status(201).json(user);
+                    });
+                });
+            } else {
+                res.sendStatus(403);
+            }
+        });
     });
 
     router.get('/check-token', function(req, res, next) {
