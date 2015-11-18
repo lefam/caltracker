@@ -24,8 +24,8 @@ module.exports = function apiRouter(config, models) {
                             expiredAt: err.expiredAt
                         });
                     } else if (err.name == 'JsonWebTokenError') {
-                        return res.status(400).json({
-                            status: 400,
+                        return res.status(401).json({
+                            status: 401,
                             message: 'Invalid Auth Token!'
                         });
                     }
