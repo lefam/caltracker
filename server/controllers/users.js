@@ -105,7 +105,16 @@ module.exports = function(config, models) {
     });
 
     router.put('/:id', function(req, res, next) {
-        //TODO: Sanitize the relevant input values.
+        req.checkBody('username').notEmpty().len(3, 20);
+        req.checkBody('password').notEmpty().len(7);
+        req.checkBody('firstName').notEmpty();
+        req.checkBody('lastName').notEmpty();
+        req.checkBody('role').notEmpty().isInt({min: 0, max: 2});
+
+        if (req.validationErrors()) {
+            return res.sendStatus(403);
+        }
+
         var data = {
             username: req.body.username,
             firstName: req.body.firstName,
@@ -114,9 +123,7 @@ module.exports = function(config, models) {
             password: req.body.password,
             role: req.body.role
         };
-        var criteria = {
-            _id: req.params.id
-        };
+
         // This makes sure that a regular user is able to update only his account but gives ability for
         // managers and administrators to update any account.
         if (req.user.role < models.user.roles().ROLE_MANAGER && req.user._id.toString() != criteria._id) {
@@ -130,25 +137,39 @@ module.exports = function(config, models) {
             }
         }
 
-        if (data.password) {
-            bcrypt.hash(data.password, 10, function(err, hash) {
-                data.password = hash;
+        var criteria = {
+            _id: req.params.id
+        };
+
+        models.user.findOne({username: data.username}, function(err, user) {
+            if (err) {
+                return next(err);
+            }
+
+            if (user && (user._id.toString() !== criteria._id)) {
+                return res.sendStatus(403);
+            }
+
+            if (data.password) {
+                bcrypt.hash(data.password, 10, function (err, hash) {
+                    data.password = hash;
+                    models.user.update(criteria, {$set: data}, function (err) {
+                        if (err) {
+                            return next(err);
+                        }
+                        res.sendStatus(200);
+                    });
+                });
+            } else {
+                delete data.password;
                 models.user.update(criteria, {$set: data}, function(err) {
                     if (err) {
                         return next(err);
                     }
                     res.sendStatus(200);
                 });
-            });
-        } else {
-            delete data.password;
-            models.user.update(criteria, {$set: data}, function(err) {
-                if (err) {
-                    return next(err);
-                }
-                res.sendStatus(200);
-            });
-        }
+            }
+        });
     });
 
     router.delete('/:id', function(req, res, next) {

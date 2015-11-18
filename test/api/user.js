@@ -194,11 +194,19 @@ describe("Users API", function() {
                 .expect(401, done);
         });
 
-        it("should return 401 when an normal user token tries to create a user", function(done) {
+        it("should return 401 when a normal user token tries to create a user", function(done) {
             request(app)
                 .post("/api/v1/users")
                 .set("X-Access-Token", tokenNormal)
                 .send({username: 'abdul', password: '123456789', firstName: 'Abdul', lastName: 'Abudo'})
+                .expect(401, done);
+        });
+
+        it("should return 401 when a manager user token tries to create a user with admin role", function(done) {
+            request(app)
+                .post("/api/v1/users")
+                .set("X-Access-Token", tokenNormal)
+                .send({username: 'abdul', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 2})
                 .expect(401, done);
         });
 
@@ -250,12 +258,85 @@ describe("Users API", function() {
                 .expect(403, done);
         });
 
-        it("should return 201 when a user is created", function(done) {
+        it("should return 201 when a manager token successfully creates a user", function(done) {
+            request(app)
+                .post('/api/v1/users')
+                .set("X-Access-Token", tokenManager)
+                .send({username: 'abdul', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 1})
+                .expect(201, done);
+        });
+
+        it("should return 201 when an admin token successfully creates a user", function(done) {
             request(app)
                 .post('/api/v1/users')
                 .set("X-Access-Token", tokenAdmin)
-                .send({username: 'abdul', password: '123456789', firstName: 'Abdul', lastName: 'Abudo'})
+                .send({username: 'abdul', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 2})
                 .expect(201, done);
+        });
+    });
+
+    describe("PUT /users/:id", function() {
+        it("should return 401 when an invalid token is given", function(done) {
+            request(app)
+                .put("/api/v1/users/" + idNormal)
+                .set("X-Access-Token", "invalid")
+                .set("Accept", "application/json")
+                .expect(401, done);
+        });
+        it("should return 403 when username is empty", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: '', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(403, done);
+        });
+
+        it("should return 403 when username is less than 3 characters", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'ab', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(403, done);
+        });
+
+        it("should return 403 when password is less than 6 characters", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'abdul', password: '1234', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(403, done);
+        });
+
+        it("should return 403 when user's first name is empty", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'abdul', password: '123456789', firstName: '', lastName: 'Abudo', role: 0})
+                .expect(403, done);
+        });
+
+        it("should return 403 when user's last name is empty", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'abdul', password: '123456789', firstName: '', lastName: '', role: 0})
+                .expect(403, done);
+        });
+
+        it("should return 403 when user role is invalid", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'abdul', password: '123456789', firstName: '', lastName: ''})
+                .expect(403, done);
+        });
+
+        it("should return 403 when user with same name already exists", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'leonel', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(403, done);
         });
     });
 });
