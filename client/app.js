@@ -104,8 +104,10 @@
         });
 
         $rootScope.$on('unauthorized', function(e) {
-            AuthService.logout();
-            $state.go("login");
+            if ($state.current.name != "login") {
+                AuthService.logout();
+                $state.go("login");
+            }
         });
     }
 })();

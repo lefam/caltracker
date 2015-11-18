@@ -24,7 +24,7 @@ module.exports = function(config, models) {
                 return next(err);
             }
             if (!user) {
-                return res.sendStatus(404);
+                return res.sendStatus(401);
             }
             bcrypt.compare(password, user.password, function(err, isEqual) {
                 if (err) {
@@ -40,7 +40,7 @@ module.exports = function(config, models) {
                         user: user
                     });
                 } else {
-                    res.sendStatus(404);
+                    res.sendStatus(401);
                 }
             });
         });
