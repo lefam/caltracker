@@ -1,23 +1,31 @@
-var router = require('express').Router();
+var mongoose = require('mongoose'),
+    router = require('express').Router();
 
 module.exports = function(config, models) {
     router.get('/:id', function(req, res, next) {
         var id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.sendStatus(404);
+        }
+
         var criteria = {
             _id: id
         };
 
-        // This makes sure that a regular user is able to fetch only his meals but gives ability for
-        // managers and administrators to fetch any meal.
-        if (req.user.role < models.user.roles().ROLE_MANAGER) {
-            criteria.user = req.user._id;
-        }
 
         models.meal.findOne(criteria, function(err, meal) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
             if (meal) {
+                // This makes sure that a regular user is able to fetch only his meals but gives ability for
+                // managers and administrators to fetch any meal.
+                if (req.user.role <= models.user.roles().ROLE_MANAGER && req.user._id.toString() != meal.user.toString()) {
+                    return res.sendStatus(401);
+                }
+
                 res.json(meal);
             } else {
                 res.sendStatus(404);
@@ -71,6 +79,11 @@ module.exports = function(config, models) {
 
     router.delete('/:id', function(req, res, next) {
         var id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.sendStatus(404);
+        }
+
         var criteria = {
             _id: id
         };
@@ -81,31 +94,44 @@ module.exports = function(config, models) {
             criteria.user = req.user._id;
         }
 
-        models.meal.remove(criteria, function(err) {
+        models.meal.findOne(criteria, function(err, meal) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
-            res.sendStatus(200);
+
+            if (meal) {
+                models.meal.remove(criteria, function(err) {
+                    /* istanbul ignore if */
+                    if (err) {
+                        return next(err);
+                    }
+                    res.sendStatus(200);
+                });
+            } else {
+                res.sendStatus(404);
+            }
         });
     });
 
     router.post('/', function(req, res, next) {
-        if (req.body.user && req.body.user != req.user._id) {
-            // Only managers and admins are allowed to create meals on behalf of other users.
-            if (req.user.role < models.user.roles().ROLE_MANAGER) {
-                return res.sendStatus(401);
-            }
+        req.checkBody('food').notEmpty();
+        req.checkBody('calories').notEmpty().isInt();
+        req.checkBody('dateTime').notEmpty().isDate();
+
+        if (req.validationErrors()) {
+            return res.sendStatus(403);
         }
 
         var data = {
             food: req.body.food,
             dateTime: req.body.dateTime,
-            calories: req.body.calories,
+            calories: req.body.calories
         };
 
         if (req.user.role !== models.user.roles().ROLE_ADMIN) {
             // Non-admin users are disallowed to create meals on behalf of other users.
-            if (req.body.user && req.body.user != req.user._id.toString()) {
+            if (req.body.user && req.body.user !== req.user._id.toString()) {
                 return res.sendStatus(401);
             } else {
                 data.user = req.user._id;
@@ -118,6 +144,7 @@ module.exports = function(config, models) {
         var meal = new models.meal(data);
 
         meal.save( function(err, m) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
@@ -126,6 +153,20 @@ module.exports = function(config, models) {
     });
 
     router.put('/:id', function(req, res, next) {
+        var id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.sendStatus(404);
+        }
+
+        req.checkBody('food').notEmpty();
+        req.checkBody('calories').notEmpty().isInt();
+        req.checkBody('dateTime').notEmpty().isDate();
+
+        if (req.validationErrors()) {
+            return res.sendStatus(403);
+        }
+
         var data = {
             food: req.body.food,
             dateTime: req.body.dateTime,
@@ -134,21 +175,32 @@ module.exports = function(config, models) {
         };
 
         var criteria = {
-            _id: req.params.id
+            _id: id
         };
 
-        // This makes sure that regular and manager users are able to fetch only their meals but gives ability for
-        // administrators to update any meal.
-        if (req.user.role <= models.user.roles().ROLE_MANAGER) {
-            criteria.user = req.user._id;
-        }
-
-        models.meal.update(criteria, {$set: data}, function(err) {
+        models.meal.findOne(criteria, function(err, meal) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
-            res.sendStatus(200);
-        });
+            if (meal) {
+                // This makes sure that regular and manager users are able to update only their meals but gives ability for
+                // administrators to update any meal.
+                if (req.user.role <= models.user.roles().ROLE_MANAGER && req.user._id.toString() !== meal.user.toString()) {
+                    return res.sendStatus(401);
+                }
+
+                models.meal.update(criteria, {$set: data}, function(err) {
+                    /* istanbul ignore if */
+                    if (err) {
+                        return next(err);
+                    }
+                    res.sendStatus(200);
+                });
+            } else {
+                res.sendStatus(404);
+            }
+        })
     });
 
     return router;

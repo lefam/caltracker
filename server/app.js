@@ -8,6 +8,7 @@ var config = require('./config'),
 	apiMiddleware = require('./middlewares/api'),
 	apiRoutes = require('./controllers');
 
+mongoose.Promise = require('bluebird');
 mongoose.connect(config.DATABASE_URL);
 
 console.log('Connected to database.');
