@@ -1,8 +1,13 @@
 process.env.NODE_ENV = "test";
-var request = require('supertest'),
+var Promise = require('bluebird'),
+    mongoose = require('mongoose'),
+    request = require('supertest'),
     models = require("../../server/models"),
     expect = require('chai').expect,
     app = require("../../server/app.js").app;
+
+// Set mongoose to use bluebird Promises.
+mongoose.Promise = Promise;
 
 var testUsers = [
     {
@@ -28,18 +33,23 @@ var testUsers = [
     }
 ];
 
-function getToken(username, password, cb) {
-    request(app)
-        .post("/api/v1/auth/login")
-        .send({username: username, password: password})
-        .end( function(err, res) {
-            if (err) return cb(err);
-            var data = {
-                token: res.body.token,
-                id: res.body.user._id
-            };
-            cb(null, data);
-        });
+function getToken(username, password) {
+    return new Promise( function(resolve, reject) {
+        request(app)
+            .post("/api/v1/auth/login")
+            .send({username: username, password: password})
+            .end( function(err, res) {
+                if (err) {
+                    reject(err);
+                } else {
+                    var data = {
+                        token: res.body.token,
+                        id: res.body.user._id
+                    };
+                    resolve(data);
+                }
+            });
+    });
 }
 
 describe("Users API", function() {
@@ -47,28 +57,27 @@ describe("Users API", function() {
         models.user
             .remove({})
             .then( function() {
-                models.user.create(testUsers);
+                return models.user.create(testUsers);
             })
             .then( function() {
-                //TODO: Use async library or promises to reduce this callback hell.
-                getToken("leonel", "1234567", function(err, data) {
-                    if (err) return done(err);
-                    tokenAdmin = data.token;
-                    idAdmin = data.id;
-
-                    getToken("ana", "abcdefg", function(err, data) {
-                        if (err) return done(err);
-                        tokenManager = data.token;
-                        idManager = data.id;
-
-                        getToken("joao", "abc1234", function(err, data) {
-                            tokenNormal = data.token;
-                            idNormal = data.id;
-                            done();
-                        });
-                    });
-                });
-            });
+                return getToken("leonel", "1234567");
+            })
+            .then( function(data) {
+                tokenAdmin = data.token;
+                idAdmin = data.id;
+                return getToken("ana", "abcdefg");
+            })
+            .then( function(data) {
+                tokenManager = data.token;
+                idManager = data.id;
+                return getToken("joao", "abc1234");
+            })
+            .then( function(data) {
+                tokenNormal = data.token;
+                idNormal = data.id;
+                done();
+            })
+            .catch(done);
     });
 
     describe("GET /users/", function() {

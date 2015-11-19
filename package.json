@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bcrypt": "^0.8.5",
+    "bluebird": "^3.0.5",
     "body-parser": "^1.14.1",
     "bower": "^1.6.5",
     "express": "^4.13.3",
@@ -33,7 +34,8 @@
     "test": "gulp test",
     "start": "node server/app",
     "start-local": "NODE_ENV=local node server/app",
-    "test-api": "mocha test/api"
+    "test-api": "mocha test/api",
+    "test-api-cov": "istanbul cover _mocha -- -R spec test/api"
   },
   "repository": {
     "type": "git",
