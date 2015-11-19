@@ -58,6 +58,7 @@
         };
 
         this.updateUser = function(user) {
+            console.log(user);
             return $http.put('/api/v1/users/' + user._id, user)
                 .then(handleSuccess);
         };

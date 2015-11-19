@@ -12,6 +12,7 @@ module.exports = function(config, models) {
         }
 
         models.user.find({}, function(err, users) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
@@ -41,6 +42,7 @@ module.exports = function(config, models) {
         }
 
         models.user.findOne(criteria, function(err, user) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
@@ -80,10 +82,11 @@ module.exports = function(config, models) {
 
         // The owner of the API token is not allowed to create users with roles that are greater than his own.
         if (data.role > req.user.role) {
-            res.sendStatus(401);
+            return res.sendStatus(401);
         }
 
         models.user.findOne({username: data.username}, function(err, user) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
@@ -92,6 +95,7 @@ module.exports = function(config, models) {
                     data.password = hash;
                     var m = models.user(data);
                     m.save(function(err, user) {
+                        /* istanbul ignore if */
                         if (err) {
                             return next(err);
                         }
@@ -111,8 +115,11 @@ module.exports = function(config, models) {
             return res.sendStatus(404);
         }
 
+        if (req.body.password && req.body.password.length < 6) {
+            return res.sendStatus(403);
+        }
+
         req.checkBody('username').notEmpty().len(3, 20);
-        req.checkBody('password').notEmpty().len(7);
         req.checkBody('firstName').notEmpty();
         req.checkBody('lastName').notEmpty();
         req.checkBody('role').notEmpty().isInt({min: 0, max: 2});
@@ -130,30 +137,30 @@ module.exports = function(config, models) {
             role: req.body.role
         };
 
+        var criteria = {
+            _id: id
+        };
+
         // This makes sure that a regular user is able to update only his account but gives ability for
         // managers and administrators to update any account.
         if (req.user.role < models.user.roles().ROLE_MANAGER && req.user._id.toString() != criteria._id) {
             return res.sendStatus(401);
         }
 
-        if (req.user.role > models.user.roles().ROLE_NORMAL) {
-            // The owner of the API token is not allowed to create users with roles that are greater than his own.
-            if (data.role > req.user.role) {
-                res.sendStatus(401);
-            }
-        }
-
-        var criteria = {
-            _id: id
-        };
-
-        models.user.findOne({username: data.username}, function(err, user) {
+        models.user.findOne(criteria, function(err, user) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
 
-            if (user && (user._id.toString() !== criteria._id)) {
-                return res.sendStatus(403);
+            if (!user) {
+                return res.sendStatus(404);
+            }
+
+            // The owner of the API token is not allowed to update users with roles that are greater than his own.
+            if (req.user.role > models.user.roles().ROLE_NORMAL && user.role > req.user.role) {
+                // The owner of the API token is not allowed to update users with roles that are greater than his own.
+                return res.sendStatus(401);
             }
 
             if (data.password) {
@@ -161,6 +168,10 @@ module.exports = function(config, models) {
                     data.password = hash;
                     models.user.update(criteria, {$set: data}, function (err) {
                         if (err) {
+                            if (err.code === 11000) {
+                                return res.sendStatus(403);
+                            }
+                            /* istanbul ignore next */
                             return next(err);
                         }
                         res.sendStatus(200);
@@ -170,6 +181,10 @@ module.exports = function(config, models) {
                 delete data.password;
                 models.user.update(criteria, {$set: data}, function(err) {
                     if (err) {
+                        if (err.code === 11000) {
+                            return res.sendStatus(403);
+                        }
+                        /* istanbul ignore next */
                         return next(err);
                     }
                     res.sendStatus(200);
@@ -195,6 +210,7 @@ module.exports = function(config, models) {
         }
 
         models.user.findOne(criteria, function(err, user) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
@@ -205,6 +221,7 @@ module.exports = function(config, models) {
                 return res.sendStatus(401);
             }
             models.user.remove(criteria, function(err) {
+                /* istanbul ignore if */
                 if(err) {
                     return next(err);
                 }

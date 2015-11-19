@@ -86,9 +86,18 @@ describe("Users API", function() {
                 });
         });
 
-        it("should return 404 when the given user id is invalid", function(done) {
+        it("should return 404 when the given user id is malformed", function(done) {
             request(app)
                 .get("/api/v1/users/123")
+                .set("X-Access-Token", tokenAdmin)
+                .set("Accept", "application/json")
+                .expect(404, done);
+        });
+
+        it("should return 404 when the user does not exist", function(done) {
+            var invalidId = mongoose.Types.ObjectId();
+            request(app)
+                .get("/api/v1/users/" + invalidId)
                 .set("X-Access-Token", tokenAdmin)
                 .set("Accept", "application/json")
                 .expect(404, done);
@@ -141,7 +150,7 @@ describe("Users API", function() {
         it("should return 401 when a manager user token tries to create a user with admin role", function(done) {
             request(app)
                 .post("/api/v1/users")
-                .set("X-Access-Token", tokenNormal)
+                .set("X-Access-Token", tokenManager)
                 .send({username: 'abdul', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 2})
                 .expect(401, done);
         });
@@ -219,6 +228,24 @@ describe("Users API", function() {
                 .set("Accept", "application/json")
                 .expect(401, done);
         });
+
+        it("should return 404 when the user id is malformed", function(done) {
+            request(app)
+                .put('/api/v1/users/invalid')
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'leonel', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(404, done);
+        });
+
+        it("should return 404 when the user does not exist", function(done) {
+            var invalidId = mongoose.Types.ObjectId();
+            request(app)
+                .put('/api/v1/users/' + invalidId)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'leonel', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(404, done);
+        });
+
         it("should return 403 when username is empty", function(done) {
             request(app)
                 .put('/api/v1/users/' + idNormal)
@@ -267,12 +294,52 @@ describe("Users API", function() {
                 .expect(403, done);
         });
 
-        it("should return 403 when user with same name already exists", function(done) {
+        it("should return 403 when user with same name already exists and is changing password", function(done) {
             request(app)
                 .put('/api/v1/users/' + idNormal)
                 .set("X-Access-Token", tokenAdmin)
                 .send({username: 'leonel', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
                 .expect(403, done);
+        });
+
+        it("should return 403 when user with same name already exists and is not changing password", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenAdmin)
+                .send({username: 'leonel', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(403, done);
+        });
+
+        it("should return 401 when a normal user tries to update records of a different user", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idManager)
+                .set("X-Access-Token", tokenNormal)
+                .send({username: 'mrking', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(401, done);
+        });
+
+        it("should return 401 when a manager user tries to update records of an admin user", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idAdmin)
+                .set("X-Access-Token", tokenManager)
+                .send({username: 'leonel', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(401, done);
+        });
+
+        it("should return 200 when the user password is successfully updated", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenNormal)
+                .send({username: 'joao', password: '999999', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(200, done);
+        });
+
+        it("should return 200 when the user is successfully updated without changing password", function(done) {
+            request(app)
+                .put('/api/v1/users/' + idNormal)
+                .set("X-Access-Token", tokenNormal)
+                .send({username: 'joao', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .expect(200, done);
         });
     });
 
@@ -312,6 +379,15 @@ describe("Users API", function() {
         it("should return 404 when the user id is invalid", function(done) {
             request(app)
                 .delete("/api/v1/users/invalid")
+                .set("X-Access-Token", tokenAdmin)
+                .set("Accept", "application/json")
+                .expect(404, done)
+        });
+
+        it("should return 404 when the user does not exist", function(done) {
+            var invalidId = mongoose.Types.ObjectId();
+            request(app)
+                .delete("/api/v1/users/" + invalidId)
                 .set("X-Access-Token", tokenAdmin)
                 .set("Accept", "application/json")
                 .expect(404, done)

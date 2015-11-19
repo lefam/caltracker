@@ -70,6 +70,7 @@ module.exports = function(config, models) {
             .limit(limit)
             .populate('user')
             .exec( function(err, meals) {
+                /* istanbul ignore if */
                 if (err) {
                     return next(err);
                 }
@@ -200,7 +201,7 @@ module.exports = function(config, models) {
             } else {
                 res.sendStatus(404);
             }
-        })
+        });
     });
 
     return router;
