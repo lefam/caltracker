@@ -5,7 +5,7 @@ module.exports = function apiRouter(config, models) {
 	var router = express.Router();
 
 	router.use(function(req, res, next) {
-        var nonSecureUrls = ['/', '/auth/login', '/auth/signup', '/auth/check-token'];
+        var nonSecureUrls = ['/', '/auth/login', '/auth/signup', '/auth/check-token', '/seed/create_admin'];
         for( var i = 0; i < nonSecureUrls.length; i++) {
             if (req.path === nonSecureUrls[i]) {
                 return next();
