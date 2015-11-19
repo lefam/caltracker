@@ -23,7 +23,13 @@ describe("Authentication API", function() {
                     done();
                 });
         });
-        it("should return 401 when invalid credentials are given", function(done) {
+        it("should return 401 when the username is invalid", function(done) {
+            request(app)
+                .post('/api/v1/auth/login')
+                .send({username: 'bad-username', password: '12345678'})
+                .expect(401, done);
+        });
+        it("should return 401 when the password is invalid", function(done) {
             request(app)
                 .post('/api/v1/auth/login')
                 .send({username: 'leonel', password: 'bad-password'})
@@ -79,6 +85,26 @@ describe("Authentication API", function() {
                 .post('/api/v1/auth/signup')
                 .send({username: 'abdul', password: '123456789', firstName: 'Abdul', lastName: 'Abudo'})
                 .expect(201, done);
+        });
+    });
+
+    describe("GET /auth/check-token", function() {
+        it("should return 200 when given a valid token in query string", function(done) {
+            request(app)
+                .get('/api/v1/auth/check-token?token=' + tokenAdmin)
+                .expect(200, done);
+        });
+
+        it("should return 401 when given an invalid token in query string", function(done) {
+            request(app)
+                .get('/api/v1/auth/check-token?token=invalid')
+                .expect(401, done);
+        });
+
+        it("should return 401 when the token is empty", function(done) {
+            request(app)
+                .get('/api/v1/auth/check-token')
+                .expect(401, done);
         });
     });
 });

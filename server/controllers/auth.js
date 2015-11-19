@@ -20,6 +20,7 @@ module.exports = function(config, models) {
         var username = req.body.username;
         var password = req.body.password;
         models.user.findOne({username: username}, function(err, user) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
@@ -27,6 +28,7 @@ module.exports = function(config, models) {
                 return res.sendStatus(401);
             }
             bcrypt.compare(password, user.password, function(err, isEqual) {
+                /* istanbul ignore if */
                 if (err) {
                     return next(err);
                 }
@@ -66,6 +68,7 @@ module.exports = function(config, models) {
         };
 
         models.user.findOne({username: data.username}, function(err, user) {
+            /* istanbul ignore if */
             if (err) {
                 return next(err);
             }
@@ -74,6 +77,7 @@ module.exports = function(config, models) {
                     data.password = hash;
                     var m = models.user(data);
                     m.save(function(err, user) {
+                        /* istanbul ignore if */
                         if (err) {
                             return next(err);
                         }
@@ -91,33 +95,20 @@ module.exports = function(config, models) {
         if (token) {
             jwt.verify(token, config.TOKEN_SIGN_SECRET, function(err, decoded) {
                 if (err) {
-                    if (err.name == 'TokenExpiredError') {
-                        return res.json({
-                            status: 401,
-                            message: 'Token expired!',
-                            expiredAt: err.expiredAt
-                        });
-                    } else if (err.name == 'JsonWebTokenError') {
-                        return res.json({
-                            status: 400,
-                            message: 'Invalid Token!'
-                        });
+                    if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
+                        return res.sendStatus(401);
                     }
+                    /* istanbul ignore next */
                     return next(err);
                 }
 
                 return res.json({
-                    status: 200,
                     message: 'Token is valid'
                 });
             });
         } else {
-            return res.status(400).json({
-                status: 400,
-                message: 'Malformed request. Please read API docs.'
-            });
+            return res.sendStatus(401);
         }
-
     });
 
     return router;
