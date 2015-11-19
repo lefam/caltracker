@@ -1,38 +1,12 @@
 process.env.NODE_ENV = "test";
 var request = require('supertest'),
-    models = require("../../server/models"),
+    mongoose = require('mongoose'),
     expect = require('chai').expect,
     app = require("../../server/app.js").app;
 
-var testUsers = [
-    {
-        username: "leonel",
-        password: "$2a$10$GV9PrIemaQgE5zdA/OJg7e7sNF0r5HgT07gyn/L.W1o7nE0KcGsPu", // 1234567
-        firstName: "Leonel",
-        lastName: "Machava"
-    },
-    {
-        username: "ana",
-        password: "$2a$10$yH3ucYi6gu8.WXPZH/rxierrDk8xdvD5lHkWOPQwwfEyBHpyNyzKS", // abcdefg
-        firstName: "Ana",
-        lastName: "Sitoe"
-    },
-    {
-        username: "joao",
-        password: "$2a$10$H060EowKW6kGoclpl0GHW.A.nAyHdcUZ/t71YDJ9KDoVGG6imsSsG", // abc1234
-        firstName: "João",
-        lastName: "Figueiredo"
-    }
-];
+require('./hooks');
 
 describe("Authentication API", function() {
-    beforeEach( function(done) {
-        models.user.remove({})
-            .then( function() {
-                models.user.create(testUsers);
-            })
-            .then(done);
-    });
     describe("POST /auth/login", function() {
         it("should return a token when correct credentials are given", function(done) {
             request(app)
