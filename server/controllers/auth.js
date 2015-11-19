@@ -81,6 +81,7 @@ module.exports = function(config, models) {
                         if (err) {
                             return next(err);
                         }
+                        delete user.password;
                         res.status(201).json(user);
                     });
                 });
