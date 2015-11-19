@@ -9,6 +9,7 @@ module.exports = function(config, models) {
         }
 
        models.user.findOne({username: req.params.username}, function(err, user) {
+           /* istanbul ignore if */
            if (err) {
                return next(err);
            }
