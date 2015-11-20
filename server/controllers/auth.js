@@ -19,7 +19,7 @@ module.exports = function(config, models) {
     router.post('/login', function(req, res, next) {
         var username = req.body.username;
         var password = req.body.password;
-        models.user.findOne({username: username}, function(err, user) {
+        models.user.findOne({username: username}).select('+password').exec( function(err, user) {
             /* istanbul ignore if */
             if (err) {
                 return next(err);
@@ -34,6 +34,7 @@ module.exports = function(config, models) {
                 }
                 if (isEqual) {
                     var token = generateToken(username, 30);
+                    user = user.toObject();
                     delete user.password;
                     res.json({
                         status: 1,
@@ -81,7 +82,6 @@ module.exports = function(config, models) {
                         if (err) {
                             return next(err);
                         }
-                        delete user.password;
                         res.status(201).json(user);
                     });
                 });

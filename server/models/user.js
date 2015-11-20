@@ -2,7 +2,11 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-	username: {
+    __v: {
+        type: Number,
+        select: false
+    },
+    username: {
         type: String,
         index: true,
         unique: true
@@ -10,7 +14,10 @@ var UserSchema = new Schema({
 	firstName: String,
 	lastName: String,
 	email: String,
-	password: String,
+	password: {
+        type: String,
+        select: false
+    },
 
     // 0 - Regular, 1 - Manager, 2 - Administrator
     role: Number

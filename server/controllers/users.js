@@ -47,7 +47,6 @@ module.exports = function(config, models) {
                 return next(err);
             }
             if (user) {
-                delete user.password;
                 res.json(user);
             } else {
                 res.sendStatus(404);
