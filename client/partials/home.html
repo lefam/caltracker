@@ -3,9 +3,7 @@
         <p>
             Hi {{currentUser.username}}!
         </p>
-        <p>
-            Todays' calories: {{homeCtrl.todayCalories}}
-        <p/>
+        <ct-calories-indicator></ct-calories-indicator>
     </div>
     <div class="meal-box">
         <button class="btn btn-success" ng-click="homeCtrl.showMealAddForm(form)">Add Meal</button>

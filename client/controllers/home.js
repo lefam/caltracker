@@ -3,9 +3,9 @@
         .module('app')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['MealService', 'ModalService', 'DateService'];
+    HomeController.$inject = ['MealService', 'ModalService', 'DateService', '$rootScope'];
 
-    function HomeController(MealService, ModalService, DateService) {
+    function HomeController(MealService, ModalService, DateService, $rootScope) {
         var vm = this;
         vm.meals = [];
         vm.meal = {};
@@ -69,6 +69,7 @@
             if (vm.isEditing) {
                 MealService.updateMeal(m)
                     .then( function() {
+                        $rootScope.$broadcast("meal.updated");
                         vm.closeModal();
                     })
                     .catch( function() {
@@ -77,6 +78,7 @@
             } else {
                 MealService.addMeal(m.food, m.calories, m.date, m.time)
                     .then( function(meal) {
+                        $rootScope.$broadcast("meal.updated");
                         vm.closeModal();
                         vm.meals.push(meal);
                     })
@@ -91,6 +93,7 @@
                 MealService
                     .deleteMeal(id)
                     .then( function() {
+                        $rootScope.$broadcast("meal.updated");
                         vm.meals = vm.meals.filter(function(t) {
                             return t._id !== id
                         });

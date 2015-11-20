@@ -185,3 +185,28 @@ main {
     max-width: 400px;
     margin: 20px auto;
 }
+
+.calories-indicator {
+    max-width: 150px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #D6523C;
+    color: #8A2D3C;
+}
+
+.calories-indicator.green {
+    background-color: #BADA55;
+    color: #D98B3A;
+}
+
+.calories-indicator .title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.calories-indicator .body {
+    text-align: center;
+    font-size: 50px;
+    font-weight: bold;
+}
