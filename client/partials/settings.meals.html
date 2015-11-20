@@ -1,9 +1,15 @@
 <div class="sexy">
-    <form ng-submit="settingsMealsCtrl.update()">
+    <form name="form" ng-submit="settingsMealsCtrl.update()" novalidate>
         <div class="form-group">
             <label>Max Calories Per Day:</label>
-            <input type="text" class="width-75" ng-model="settingsMealsCtrl.maxDailyCalories">
+            <input type="number" name="calories" min="0" class="width-75" ng-model="settingsMealsCtrl.maxDailyCalories" required>
+            <p ng-show="form.calories.$error.required && !form.calories.$pristine">Calories cannot be blank</p>
+            <p ng-show="form.calories.$error.number && !form.calories.$pristine">Not a valid number</p>
+            <p ng-show="form.calories.$error.min && !form.calories.$pristine">Negative numbers not allowed</p>
         </div>
-        <button type="submit" class="button">Update</button>
+        <button type="submit" class="button"
+                ng-disabled="form.$invalid"
+                title="{{ form.$invalid ?
+                              'Please fill all required fields before submitting' : '' }}">Update</button>
     </form>
 </div>
