@@ -12,7 +12,6 @@
 
         UserService.getCurrentUser()
             .then( function(user) {
-                console.log(user);
                 vm.isLoaded = true;
                 vm.user = user;
             });

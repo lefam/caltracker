@@ -25,7 +25,6 @@
                     store.setItem("user.username", username);
                     store.setItem("user.json", JSON.stringify(user));
                     $rootScope.currentUser = user;
-                    console.log(user);
                     //$http.get("/api/v1/me")
                     //    .then( function(response) {
                     //        alert(response.data.firstName + " - this is working!");

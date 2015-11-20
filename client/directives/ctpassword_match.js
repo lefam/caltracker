@@ -8,7 +8,6 @@
             scope:true,
             require: 'ngModel',
             link: function (scope, elem , attrs,control) {
-                console.log(attrs);
                 var checker = function () {
 
                     //get the value of the first password

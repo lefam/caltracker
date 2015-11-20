@@ -18,7 +18,6 @@
 
         MealService.getAllTodayMeals()
             .then( function(meals) {
-                console.log(meals);
                 vm.meals = meals;
             });
 

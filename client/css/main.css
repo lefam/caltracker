@@ -65,6 +65,11 @@ a.logo {
     color: #666;
 }
 
+.orphan-button-adjust {
+    margin-top: -30px;
+    padding: 15px 17px;
+}
+
 .login-box label {
     color: #777;
 }

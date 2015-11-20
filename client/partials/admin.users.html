@@ -3,18 +3,24 @@
     <div>
         <ct-modal>
             <div class="modal-child">
-                <form ng-submit="signupCtrl.signup()">
+                <form name="form"  novalidate>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input id="username" type="text" ng-model="adminUsersCtrl.user.username">
+                        <input name="username" type="text" ng-model="adminUsersCtrl.user.username"
+                               ng-minlength="3" ng-maxlength="20" required>
+                        <p ng-show="form.username.$error.minlength">Username is too short</p>
+                        <p ng-show="form.username.$error.maxlength">Username is too long</p>
+                        <p ng-show="form.username.$error.required && !form.username.$pristine">Username cannot be blank</p>
                     </div>
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input id="firstName" type="text" ng-model="adminUsersCtrl.user.firstName">
+                        <input name="firstName" type="text" ng-model="adminUsersCtrl.user.firstName" required>
+                        <p ng-show="form.firstName.$error.required && !form.firstName.$pristine">First name cannot be blank</p>
                     </div>
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
-                        <input id="lastName" type="text" ng-model="adminUsersCtrl.user.lastName">
+                        <input name="lastName" type="text" ng-model="adminUsersCtrl.user.lastName" required>
+                        <p ng-show="form.lastName.$error.required && !form.lastName.$pristine">Last name cannot be blank</p>
                     </div>
 
                     <div class="form-group" ng-show="adminUsersCtrl.isEditingUser && !adminUsersCtrl.isChangingPassword">
@@ -22,7 +28,9 @@
                     </div>
                     <div class="form-group" ng-show="!adminUsersCtrl.isEditingUser || adminUsersCtrl.isChangingPassword">
                         <label for="password">Password</label>
-                        <input id="password" type="password" ng-model="adminUsersCtrl.user.password">
+                        <input name="password" type="password" ng-model="adminUsersCtrl.user.password" ng-minlength="6" required>
+                        <p ng-show="form.password.$error.required && !form.password.$pristine">Password cannot be blank</p>
+                        <p ng-show="form.password.$error.minlength && !form.password.$pristine">Password is too short</p>
                     </div>
                     <div class="form-group" ng-show="adminUsersCtrl.canChangeRole">
                         <label for="role">Role</label>
@@ -30,7 +38,10 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="button" ng-click="adminUsersCtrl.addOrUpdateUser()">Add/Update</button>
+                        <button type="submit" class="button" ng-click="adminUsersCtrl.addOrUpdateUser()"
+                                ng-disabled="!adminUsersCtrl.isValid(form)"
+                                title="{{ !adminUsersCtrl.isValid(form) ?
+                                        'Please fill all required fields before submitting' : '' }}">Add/Update</button>
                         <a href="" ng-click="adminUsersCtrl.closeModal()">Cancel</a>
                     </div>
                 </form>

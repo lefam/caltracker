@@ -17,7 +17,6 @@
 
         UserService.getUsers()
             .then( function(users) {
-                console.log(users);
                 vm.users = users;
             });
 
@@ -41,6 +40,17 @@
             vm.user = {role: 0};
             vm.canChangeRole = true;
             ModalService.open();
+        };
+
+        this.isValid = function(form) {
+            var isPartiallyValid =
+                form.username.$valid &&
+                form.firstName.$valid &&
+                form.lastName.$valid;
+            if (!vm.isEditingUser || vm.isChangingPassword) {
+                return isPartiallyValid && form.password.$valid;
+            }
+            return isPartiallyValid;
         };
 
         this.addOrUpdateUser = function() {
