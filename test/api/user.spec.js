@@ -351,6 +351,57 @@ describe("Users API", function() {
         });
     });
 
+    describe("(update maxCaloriesPerDay) PATCH /users/:id/max_daily_calories", function() {
+        it("should return 401 when an invalid token is given", function(done) {
+            request(app)
+                .patch("/api/v1/users/" + idNormal + "/max_daily_calories")
+                .set("X-Access-Token", "invalid")
+                .set("Accept", "application/json")
+                .send({maxCaloriesPerDay: 300})
+                .expect(401, done);
+        });
+
+        it("should return 404 when the user id is malformed", function(done) {
+            request(app)
+                .patch('/api/v1/users/invalid/max_daily_calories')
+                .set("X-Access-Token", tokenAdmin)
+                .send({maxCaloriesPerDay: 300})
+                .expect(404, done);
+        });
+
+        it("should return 404 when the user does not exist", function(done) {
+            var invalidId = mongoose.Types.ObjectId();
+            request(app)
+                .patch('/api/v1/users/' + invalidId + "/max_daily_calories")
+                .set("X-Access-Token", tokenAdmin)
+                .send({maxCaloriesPerDay: 300})
+                .expect(404, done);
+        });
+
+        it("should return 403 when maxCaloriesPerDay is empty", function(done) {
+            request(app)
+                .patch('/api/v1/users/' + idNormal + "/max_daily_calories")
+                .set("X-Access-Token", tokenNormal)
+                .expect(403, done);
+        });
+
+        it("should return 403 when maxCaloriesPerDay is invalid", function(done) {
+            request(app)
+                .patch('/api/v1/users/' + idNormal + "/max_daily_calories")
+                .set("X-Access-Token", tokenNormal)
+                .send({maxCaloriesPerDay: 'invalid'})
+                .expect(403, done);
+        });
+
+        it("should return 200 when the user is successfully patched", function(done) {
+            request(app)
+                .patch('/api/v1/users/' + idNormal + "/max_daily_calories")
+                .set("X-Access-Token", tokenNormal)
+                .send({maxCaloriesPerDay: 300})
+                .expect(200, done);
+        });
+    });
+
     describe("DELETE /users/:id", function() {
         it("should return 401 when an invalid token is given", function (done) {
             request(app)

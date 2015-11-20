@@ -8,7 +8,7 @@
     function UserService($http) {
         function handleSuccess(response) {
             return response.data;
-        };
+        }
 
         this.getCurrentUser = function() {
             return $http.get('/api/v1/me')
@@ -18,7 +18,7 @@
         this.getUsers = function() {
             return $http.get('/api/v1/users')
                 .then(handleSuccess);
-        }
+        };
 
         this.getById = function(id) {
             return $http.get('/api/v1/users/' + id)
@@ -69,7 +69,7 @@
         };
 
         this.setMaxCaloriesPerDay = function(userId, calories) {
-            return $http.put('/api/v1/users/' + userId + '/max_daily_calories', {calories: calories})
+            return $http.patch('/api/v1/users/' + userId + '/max_daily_calories', {maxCaloriesPerDay: calories})
                 .then(handleSuccess);
         };
     }

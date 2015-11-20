@@ -20,7 +20,9 @@ var UserSchema = new Schema({
     },
 
     // 0 - Regular, 1 - Manager, 2 - Administrator
-    role: Number
+    role: Number,
+
+    maxCaloriesPerDay: Number
 });
 
 UserSchema.statics.roles = function() {

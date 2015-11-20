@@ -76,6 +76,7 @@ module.exports = function(config, models) {
             lastName: req.body.lastName,
             email: req.body.email,
             password: req.body.password,
+            maxCaloriesPerDay: req.maxCaloriesPerDay || 250,
             role: Number(req.body.role) || 0
         };
 
@@ -104,6 +105,62 @@ module.exports = function(config, models) {
             } else {
                 res.sendStatus(403);
             }
+        });
+    });
+
+    router.patch('/:id/max_daily_calories', function(req, res, next) {
+        var id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.sendStatus(404);
+        }
+
+        req.checkBody('maxCaloriesPerDay').notEmpty().isInt({min: 0});
+
+        if (req.validationErrors()) {
+            return res.sendStatus(403);
+        }
+
+        var data = {
+            maxCaloriesPerDay: req.body.maxCaloriesPerDay
+        };
+
+        var criteria = {
+            _id: id
+        };
+
+        // This makes sure that a regular user is able to update only his account but gives ability for
+        // managers and administrators to update any account.
+        if (req.user.role < models.user.roles().ROLE_MANAGER && req.user._id.toString() != criteria._id) {
+            return res.sendStatus(401);
+        }
+
+        models.user.findOne(criteria, function(err, user) {
+            /* istanbul ignore if */
+            if (err) {
+                return next(err);
+            }
+
+            if (!user) {
+                return res.sendStatus(404);
+            }
+
+            // The owner of the API token is not allowed to update users with roles that are greater than his own.
+            if (req.user.role > models.user.roles().ROLE_NORMAL && user.role > req.user.role) {
+                // The owner of the API token is not allowed to update users with roles that are greater than his own.
+                return res.sendStatus(401);
+            }
+
+            models.user.update(criteria, {$set: data}, function(err) {
+                if (err) {
+                    if (err.code === 11000) {
+                        return res.sendStatus(403);
+                    }
+                    /* istanbul ignore next */
+                    return next(err);
+                }
+                res.sendStatus(200);
+            });
         });
     });
 

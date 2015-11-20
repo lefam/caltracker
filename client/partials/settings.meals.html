@@ -1,5 +1,8 @@
 <div class="sexy">
-    <form name="form" ng-submit="settingsMealsCtrl.update()" novalidate>
+    <div ng-hide="settingsMealsCtrl.isLoaded">
+        Loading...
+    </div>
+    <form ng-show="settingsMealsCtrl.isLoaded" name="form" ng-submit="settingsMealsCtrl.update()" novalidate>
         <div class="form-group">
             <label>Max Calories Per Day:</label>
             <input type="number" name="calories" min="0" class="width-75" ng-model="settingsMealsCtrl.maxDailyCalories" required>
