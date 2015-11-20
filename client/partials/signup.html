@@ -20,12 +20,15 @@
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input name="password" type="password" ng-model="signupCtrl.user.password" required>
+            <input name="password" type="password" ng-model="signupCtrl.user.password" ng-minlength="6" required>
             <p ng-show="form.password.$error.required && !form.password.$pristine">Password cannot be blank</p>
+            <p ng-show="form.password.$error.minlength && !form.password.$pristine">Password is too short</p>
         </div>
         <div class="form-group">
             <label for="passwordConf">Password Confirmation:</label>
-            <input name="passwordConf" type="password" ng-model="signupCtrl.user.passwordConf">
+            <input name="passwordConf" type="password" ng-model="signupCtrl.user.passwordConf"
+                    ct-password-match="signupCtrl.user.password">
+            <p ng-show="form.passwordConf.$error.pwMatch && !form.passwordConf.$pristine">Password and confirmation do not match</p>
         </div>
         <div class="form-group">
             <button type="submit" class="button" ng-disabled="form.$invalid"
