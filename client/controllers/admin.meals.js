@@ -8,6 +8,7 @@
     function AdminMealsController(AuthService, UserService, MealService, ModalService, DateService) {
         var vm = this;
         vm.isEditing = false;
+        vm.lastMeal = {};
 
         vm.filter = {
             dateFrom: DateService.formatDate(new Date()),
@@ -45,10 +46,13 @@
             var d = new Date(meal.dateTime);
             vm.meal.date = DateService.formatDate(d);
             vm.meal.time = DateService.formatTime(d);
+
             ModalService.open();
         };
 
-        this.showMealAddForm = function() {
+        this.showMealAddForm = function(form) {
+            form.$setPristine();
+            vm.lastMeal = vm.meal;
             vm.meal = {};
             var d = new Date();
             vm.meal.date = DateService.formatDate(d);
