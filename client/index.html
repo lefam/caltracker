@@ -12,8 +12,6 @@
         <link href="/vendor/pickadate/compressed/themes/classic.date.css" rel="stylesheet">
         <link href="/vendor/pickadate/compressed/themes/classic.time.css" rel="stylesheet">
         <link href="/css/main.css" rel="stylesheet">
-        <link href="/css/main.css" rel="stylesheet">
-        <link href="/css/main.css" rel="stylesheet">
         <script src="/vendor/jquery/jquery.min.js"></script>
         <script src="/vendor/angular/angular.min.js"></script>
 	</head>
@@ -34,10 +32,14 @@
                 <div ui-view></div>
             </main>
         </div>
+
         <script src="/vendor/angular-ui-router/angular-ui-router.min.js"></script>
+
         <script src="vendor/pickadate/compressed/picker.js"></script>
         <script src="vendor/pickadate/compressed/picker.date.js"></script>
         <script src="vendor/pickadate/compressed/picker.time.js"></script>
+
+        <!--removeIf(production)-->
         <script src="app.js"></script>
         <script src="directives/ctmodal.js"></script>
         <script src="directives/ctdatepicker.js"></script>
@@ -58,5 +60,10 @@
         <script src="controllers/profile.js"></script>
         <script src="controllers/admin.users.js"></script>
         <script src="controllers/admin.meals.js"></script>
+        <!--endRemoveIf(production)-->
+
+        <!--removeIf(development)-->
+        <script src="all.js"></script>
+        <!--endRemoveIf(development)-->
 	</body>
 </html>
