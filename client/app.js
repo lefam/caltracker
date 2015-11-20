@@ -1,6 +1,6 @@
 (function() {
     angular
-        .module('app', ['ui.router'])
+        .module('app', ['ui.router', 'angular-loading-bar'])
         .config(configBlock)
         .run(runBlock);
 

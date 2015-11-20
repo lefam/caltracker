@@ -29,6 +29,9 @@ gulp.task('vendor', function vendorTask() {
     gulp.src(['client/vendor/pickadate/lib/**/*'])
         .pipe(gulp.dest('public/vendor/pickadate/'));
 
+    gulp.src(['client/vendor/angular-loading-bar/**/*'])
+        .pipe(gulp.dest('public/vendor/angular-loading-bar/'));
+
     gulp.src(['client/vendor/jquery/dist/**/*'])
         .pipe(gulp.dest('public/vendor/jquery/'));
 });
