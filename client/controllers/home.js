@@ -46,7 +46,8 @@
             ModalService.close();
         };
 
-        this.showMealAddForm = function() {
+        this.showMealAddForm = function(form) {
+            form.$setPristine(true);
             vm.meal = {};
             var d = new Date();
             vm.meal.date = DateService.formatDate(d);

@@ -8,7 +8,7 @@
         <p/>
     </div>
     <div class="meal-box">
-        <button class="btn btn-success" ng-click="homeCtrl.showMealAddForm()">Add Meal</button>
+        <button class="btn btn-success" ng-click="homeCtrl.showMealAddForm(form)">Add Meal</button>
         <ct-modal>
             <div class="modal-child">
                 <form name="form" ng-submit="homeCtrl.addOrUpdateMeal()" novalidate>

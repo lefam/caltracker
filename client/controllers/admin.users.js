@@ -25,6 +25,7 @@
         };
 
         this.closeModal = function() {
+            vm.user = {};
             this.isEditingUser = false;
             ModalService.close();
         };
@@ -36,8 +37,11 @@
             ModalService.open();
         };
 
-        this.showUserAddForm = function() {
-            vm.user = {role: 0};
+        this.showUserAddForm = function(form) {
+            form.$setPristine();
+
+            vm.user = {};
+            vm.user.role = 0;
             vm.canChangeRole = true;
             ModalService.open();
         };
