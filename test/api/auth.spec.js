@@ -52,6 +52,13 @@ describe("Authentication API", function() {
                 .expect(403, done);
         });
 
+        it("should return 403 when username has more than 20 characters", function(done) {
+            request(app)
+                .post('/api/v1/auth/signup')
+                .send({username: 'abcdefghijklmnopqrstu', password: '123456789', firstName: 'Abdul', lastName: 'Abudo'})
+                .expect(403, done);
+        });
+
         it("should return 403 when password is less than 6 characters", function(done) {
             request(app)
                 .post('/api/v1/auth/signup')

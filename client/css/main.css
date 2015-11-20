@@ -81,6 +81,11 @@ a.logo {
     border-radius: 3px;
 }
 
+.form-group p {
+    font-size: 12px;
+    color: #cc0000;
+}
+
 .sexy select {
     display: block;
 }

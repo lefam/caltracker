@@ -80,5 +80,5 @@ gulp.task('build-dev', ['clean', 'vendor', 'client']);
 gulp.task('build', ['clean', 'vendor', 'client-dist']);
 
 gulp.task('watch', function watchTask() {
-   gulp.watch('client/**', ['build']);
+   gulp.watch('client/**', ['client']);
 });
