@@ -17,6 +17,7 @@ module.exports = function apiRouter(config, models) {
         if (token) {
             jwt.verify(token, config.TOKEN_SIGN_SECRET, function(err, decoded) {
                 if (err) {
+                    /* istanbul ignore next */
                     if (err.name == 'TokenExpiredError') {
                         return res.status(401).json({
                             status: 401,
@@ -29,10 +30,12 @@ module.exports = function apiRouter(config, models) {
                             message: 'Invalid Auth Token!'
                         });
                     }
+                    /* istanbul ignore next */
                     return next(err);
                 }
 
                 models.user.findOne({username: decoded.username}, function(err, user) {
+                    /* istanbul ignore if */
                     if (err) {
                         return next(err);
                     }

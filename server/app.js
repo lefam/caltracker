@@ -21,6 +21,7 @@ app.use(expressValidator());
 app.use('/api/v1/', apiMiddleware(config, models));
 app.use('/api/v1', apiRoutes(config, models));
 
+/* istanbul ignore next */
 app.get('/', function rootRoute(req, res) {
     res.sendFile(path.resolve(__dirname + '/../public/index.html'));
 });
@@ -31,3 +32,4 @@ app.listen(config.PORT);
 console.log('Listening on port ' + config.PORT);
 
 exports.app = app;
+exports.config = config;
