@@ -31,7 +31,8 @@
             <p ng-show="form.passwordConf.$error.pwMatch && !form.passwordConf.$pristine">Password and confirmation do not match</p>
         </div>
         <div class="form-group">
-            <button type="submit" class="button" ng-disabled="form.$invalid"
+            <button type="submit" class="button"
+                    ng-disabled="form.$invalid"
                     title="{{ form.$invalid ?
                               'Please fill all required fields before submitting' : '' }}">Sign Up</button>
         </div>
