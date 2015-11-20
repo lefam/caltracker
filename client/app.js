@@ -50,7 +50,7 @@
             .state('settings.profile', {
                 url: '/settings/profile',
                 templateUrl: 'partials/settings.profile.html',
-                controller: 'ProfileController as settingsProfileCtrl'
+                controller: 'SettingsProfileController as settingsProfileCtrl'
             })
             .state('settings.security', {
                 url: '/settings/security',

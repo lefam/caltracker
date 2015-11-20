@@ -1,11 +1,11 @@
 (function() {
     angular
         .module('app')
-        .controller('ProfileController', ProfileController);
+        .controller('SettingsProfileController', SettingsProfileController);
 
-    ProfileController.$inject = ['UserService'];
+    SettingsProfileController.$inject = ['UserService'];
 
-    function ProfileController(UserService) {
+    function SettingsProfileController(UserService) {
         var vm = this;
         vm.isChangingPassword = false;
         vm.isLoaded = false;
@@ -22,14 +22,21 @@
         }
 
         this.update = function() {
-            console.log(vm.user);
+            if (!vm.isChangingPassword) {
+                delete vm.user.currentPassword;
+                delete vm.user.password;
+            }
             UserService
                 .updateUser(vm.user)
                 .then( function() {
                     alert('Profile updated with success!');
                 })
-                .catch( function() {
-                    alert('Failed to update profile!');
+                .catch( function(response) {
+                    if (response.data && response.data.message) {
+                        alert(response.data.message);
+                    } else {
+                        alert("Failed to update user");
+                    }
                 });
         }
     }

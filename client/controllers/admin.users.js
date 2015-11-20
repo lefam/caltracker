@@ -51,8 +51,12 @@
                     .then( function(user) {
                         vm.closeModal();
                     })
-                    .catch( function() {
-                        alert('Failed to save!');
+                    .catch( function(response) {
+                        if (response.data && response.data.message) {
+                            alert(response.data.message);
+                        } else {
+                            alert('Failed to save!');
+                        }
                     });
 
             } else {

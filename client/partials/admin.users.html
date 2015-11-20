@@ -18,7 +18,7 @@
                     </div>
 
                     <div class="form-group" ng-show="adminUsersCtrl.isEditingUser && !adminUsersCtrl.isChangingPassword">
-                        <a href="#" ng-click="adminUsersCtrl.toggleChangePassword()">Change Password</a>
+                        <a href="" ng-click="adminUsersCtrl.toggleChangePassword()">Change Password</a>
                     </div>
                     <div class="form-group" ng-show="!adminUsersCtrl.isEditingUser || adminUsersCtrl.isChangingPassword">
                         <label for="password">Password</label>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="button" ng-click="adminUsersCtrl.addOrUpdateUser()">Add/Update</button>
-                        <a href="#" ng-click="adminUsersCtrl.closeModal()">Cancel</a>
+                        <a href="" ng-click="adminUsersCtrl.closeModal()">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -50,9 +50,9 @@
                 <td>{{user.firstName}}</td>
                 <td>{{user.lastName}}</td>
                 <td>
-                    <a href="#" ng-click="adminUsersCtrl.showUserEditForm(user)">Edit</a>
+                    <a href="" ng-click="adminUsersCtrl.showUserEditForm(user)">Edit</a>
 
-                    <a href="#" ng-click="adminUsersCtrl.removeUser(user._id)">Remove</a>
+                    <a href="" ng-click="adminUsersCtrl.removeUser(user._id)">Remove</a>
                 </td>
             </tr>
         </tbody>

@@ -189,6 +189,7 @@ module.exports = function(config, models) {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,
+            currentPassword: req.body.currentPassword,
             password: req.body.password,
             role: req.body.role
         };
@@ -203,7 +204,7 @@ module.exports = function(config, models) {
             return res.sendStatus(401);
         }
 
-        models.user.findOne(criteria, function(err, user) {
+        models.user.findOne(criteria).select("+password").exec( function(err, user) {
             /* istanbul ignore if */
             if (err) {
                 return next(err);
@@ -220,25 +221,51 @@ module.exports = function(config, models) {
             }
 
             if (data.password) {
-                bcrypt.hash(data.password, 10, function (err, hash) {
-                    data.password = hash;
-                    models.user.update(criteria, {$set: data}, function (err) {
-                        if (err) {
-                            if (err.code === 11000) {
-                                return res.sendStatus(403);
+                if (!data.currentPassword && req.user.role >= models.user.roles().ROLE_MANAGER) {
+                    bcrypt.hash(data.password, 10, function (err, hash) {
+                        data.password = hash;
+                        models.user.update(criteria, {$set: data}, function (err) {
+                            if (err) {
+                                if (err.code === 11000) {
+                                    return res.status(403).json({message: 'Username already exists'});
+                                }
+                                /* istanbul ignore next */
+                                return next(err);
                             }
-                            /* istanbul ignore next */
+                            res.sendStatus(200);
+                        });
+                    });
+                } else {
+                    bcrypt.compare(data.currentPassword, user.password, function(err, isEqual) {
+                        if (err) {
                             return next(err);
                         }
-                        res.sendStatus(200);
+                        if (isEqual) {
+                            bcrypt.hash(data.password, 10, function (err, hash) {
+                                data.password = hash;
+                                models.user.update(criteria, {$set: data}, function (err) {
+                                    if (err) {
+                                        if (err.code === 11000) {
+                                            return res.status(403).json({message: 'Username already exists'});
+                                        }
+                                        /* istanbul ignore next */
+                                        return next(err);
+                                    }
+                                    res.sendStatus(200);
+                                });
+                            });
+                        } else {
+                            res.status(403).json({message: "Current password is invalid!"});
+                        }
                     });
-                });
+                }
             } else {
                 delete data.password;
+                delete data.currentPassword;
                 models.user.update(criteria, {$set: data}, function(err) {
                     if (err) {
                         if (err.code === 11000) {
-                            return res.sendStatus(403);
+                            return res.status(403).json({message: 'Username already exists'});
                         }
                         /* istanbul ignore next */
                         return next(err);

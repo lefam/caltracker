@@ -306,7 +306,7 @@ describe("Users API", function() {
             request(app)
                 .put('/api/v1/users/' + idNormal)
                 .set("X-Access-Token", tokenAdmin)
-                .send({username: 'leonel', password: '123456789', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .send({username: 'leonel', password: '123456789', currentPassword: 'abc1234', firstName: 'Abdul', lastName: 'Abudo', role: 0})
                 .expect(403, done);
         });
 
@@ -338,7 +338,7 @@ describe("Users API", function() {
             request(app)
                 .put('/api/v1/users/' + idNormal)
                 .set("X-Access-Token", tokenNormal)
-                .send({username: 'joao', password: '999999', firstName: 'Abdul', lastName: 'Abudo', role: 0})
+                .send({username: 'joao', password: '999999', currentPassword: 'abc1234', firstName: 'Abdul', lastName: 'Abudo', role: 0})
                 .expect(200, done);
         });
 

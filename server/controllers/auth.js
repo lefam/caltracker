@@ -10,8 +10,8 @@ module.exports = function(config, models) {
         return days * 24 * 60;
     }
 
-    function generateToken(username, validDays) {
-        return jwt.sign({username: username}, config.TOKEN_SIGN_SECRET, {
+    function generateToken(userId, validDays) {
+        return jwt.sign({userId: userId}, config.TOKEN_SIGN_SECRET, {
             expiresIn: daysToMinutes(validDays) * 60
         });
     }
@@ -33,7 +33,7 @@ module.exports = function(config, models) {
                     return next(err);
                 }
                 if (isEqual) {
-                    var token = generateToken(username, 30);
+                    var token = generateToken(user._id.toString(), 30);
                     user = user.toObject();
                     delete user.password;
                     res.json({

@@ -34,7 +34,7 @@ module.exports = function apiRouter(config, models) {
                     return next(err);
                 }
 
-                models.user.findOne({username: decoded.username}, function(err, user) {
+                models.user.findOne({_id: decoded.userId}, function(err, user) {
                     /* istanbul ignore if */
                     if (err) {
                         return next(err);

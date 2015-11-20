@@ -2,40 +2,57 @@
     <div ng-hide="settingsProfileCtrl.isLoaded">
         Loading...
     </div>
-    <form ng-show="settingsProfileCtrl.isLoaded" ng-submit="settingsProfileCtrl.update()">
+    <form name="form" ng-show="settingsProfileCtrl.isLoaded"  novalidate>
         <div class="form-group">
             <label for="username">Username</label>
-            <input id="username" type="text" ng-model="settingsProfileCtrl.user.username">
+            <input name="username" type="text" ng-model="settingsProfileCtrl.user.username" ng-minlength="3" ng-maxlength="20" required>
+            <p ng-show="form.username.$error.minlength">Username is too short</p>
+            <p ng-show="form.username.$error.maxlength">Username is too long</p>
+            <p ng-show="form.username.$error.required && !form.username.$pristine">Username cannot be blank</p>
         </div>
         <div class="form-group">
             <label for="firstName">First Name</label>
-            <input id="firstName" type="text" ng-model="settingsProfileCtrl.user.firstName">
+            <input name="firstName" type="text" ng-model="settingsProfileCtrl.user.firstName" required>
+            <p ng-show="form.firstName.$error.required && !form.firstName.$pristine">First name cannot be blank</p>
         </div>
         <div class="form-group">
             <label for="lastName">Last Name</label>
-            <input id="lastName" type="text" ng-model="settingsProfileCtrl.user.lastName">
+            <input name="lastName" type="text" ng-model="settingsProfileCtrl.user.lastName" required>
+            <p ng-show="form.lastName.$error.required && !form.lastName.$pristine">Last name cannot be blank</p>
         </div>
 
         <div class="form-group" ng-hide="settingsProfileCtrl.isChangingPassword">
-            <a href="#" ng-click="settingsProfileCtrl.toggleChangePassword()">Change Password</a>
-        </div>
-
-        <div ng-show="settingsProfileCtrl.isChangingPassword">
-            <div class="form-group">
-                <label for="password">Current Password</label>
-                <input id="password" type="password" ng-model="settingsProfileCtrl.user.currentPassword">
-            </div>
-            <div class="form-group">
-                <label for="password">New Password</label>
-                <input id="password" type="password" ng-model="settingsProfileCtrl.user.newPassword">
-            </div>
-           <div class="form-group">
-                <label for="passwordConf">Password Confirmation:</label>
-                <input id="passwordConf" type="password" ng-model="settingsProfileCtrl.user.passwordConf">
-            </div>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="button">Update Profile</button>
+            <a href="" ng-click="settingsProfileCtrl.toggleChangePassword()">Change Password</a>
         </div>
     </form>
+
+    <div ng-show="settingsProfileCtrl.isChangingPassword">
+        <form name="pwForm" novalidate>
+            <div class="form-group">
+                <label for="password">Current Password</label>
+                <input name="password" type="password" ng-model="settingsProfileCtrl.user.currentPassword" required>
+                <p ng-show="pwForm.password.$error.required && !pwForm.password.$pristine">Password cannot be blank</p>
+            </div>
+            <div class="form-group">
+                <label for="passwordNew">New Password</label>
+                <input name="passwordNew" type="password" ng-model="settingsProfileCtrl.user.password" ng-minlength="6" required>
+                <p ng-show="pwForm.passwordNew.$error.required && !pwForm.passwordNew.$pristine">Password cannot be blank</p>
+                <p ng-show="pwForm.passwordNew.$error.minlength && !pwForm.passwordNew.$pristine">Password is too short</p>
+            </div>
+            <div class="form-group">
+                <label for="passwordConf">Password Confirmation:</label>
+                <input name="passwordConf" type="password" ng-model="settingsProfileCtrl.user.passwordConf"
+                       ct-password-match="settingsProfileCtrl.user.password"
+                       required>
+                <p ng-show="pwForm.passwordConf.$error.pwMatch &&
+                            !pwForm.passwordConf.$pristine">Password and confirmation do not match</p>
+            </div>
+        </form>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="button" ng-click="settingsProfileCtrl.update()"
+                ng-disabled="form.$invalid || settingsProfileCtrl.isChangingPassword && pwForm.$invalid"
+                title="{{ form.$invalid || settingsProfileCtrl.isChangingPassword && pwForm.$invalid ?
+                          'Please fill all required fields before submitting' : '' }}">Update Profile</button>
+    </div>
 </div>

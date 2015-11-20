@@ -3,9 +3,9 @@
         .module('app')
         .service('UserService', UserService);
 
-    UserService.$inject = ['$http'];
+    UserService.$inject = ['$q', '$http'];
 
-    function UserService($http) {
+    function UserService($q, $http) {
         function handleSuccess(response) {
             return response.data;
         }
@@ -44,7 +44,6 @@
             return $http.post('/api/v1/users', user)
                 .then(handleSuccess);
         };
-
         // This method should be used when the client is not authenticated, eg. through a signup form.
         this.createUserForAuth = function(username, firstName, lastName, email, password) {
             var user = {
@@ -58,7 +57,13 @@
         };
 
         this.updateUser = function(user) {
-            console.log(user);
+            if (user.currentPassword && user.password !== user.passwordConf) {
+                var response = {};
+                response.data = {
+                    message: "Password and confirmation do not match"
+                }
+                return $q.reject(response);
+            }
             return $http.put('/api/v1/users/' + user._id, user)
                 .then(handleSuccess);
         };
