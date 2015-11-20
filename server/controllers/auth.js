@@ -51,7 +51,7 @@ module.exports = function(config, models) {
 
     router.post('/signup', function(req, res, next) {
         req.checkBody('username').notEmpty().len(3, 20);
-        req.checkBody('password').notEmpty().len(7);
+        req.checkBody('password').notEmpty().len(6);
         req.checkBody('firstName').notEmpty();
         req.checkBody('lastName').notEmpty();
 

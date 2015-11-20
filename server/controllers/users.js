@@ -62,7 +62,7 @@ module.exports = function(config, models) {
         }
 
         req.checkBody('username').notEmpty().len(3, 20);
-        req.checkBody('password').notEmpty().len(7);
+        req.checkBody('password').notEmpty().len(6);
         req.checkBody('firstName').notEmpty();
         req.checkBody('lastName').notEmpty();
 
@@ -308,7 +308,13 @@ module.exports = function(config, models) {
                 if(err) {
                     return next(err);
                 }
-                res.sendStatus(200);
+                // Remove all the meals associated with this user.
+                models.meal.remove({user: user._id}, function(err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.sendStatus(200);
+                });
             });
         });
     });
