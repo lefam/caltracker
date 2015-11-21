@@ -15,6 +15,7 @@
                 .then( function(meals) {
                     vm.meals = meals;
                     vm.calories = 0;
+                    console.log(meals);
                     meals.forEach( function(m) {
                         vm.calories += m.calories;
                     });
