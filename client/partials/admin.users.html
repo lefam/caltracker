@@ -51,6 +51,7 @@
     <table class="table">
         <thead>
             <th>Username</th>
+            <th>Role</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Actions</th>
@@ -58,6 +59,13 @@
         <tbody>
             <tr ng-repeat="user in adminUsersCtrl.users">
                 <td>{{user.username}}</td>
+                <td>
+                    <div ng-switch="user.role">
+                        <div ng-switch-when="0">Regular</div>
+                        <div ng-switch-when="1">Manager</div>
+                        <div ng-switch-when="2">Admin</div>
+                    </div>
+                </td>
                 <td>{{user.firstName}}</td>
                 <td>{{user.lastName}}</td>
                 <td>

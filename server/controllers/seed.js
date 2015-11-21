@@ -15,7 +15,7 @@ module.exports = function(config, models) {
             } else {
                 var adminUser = {
                     username: 'admin',
-                    password: 'x9d@1lk',
+                    password: 'leonel',
                     firstName: 'Leonel',
                     lastName: 'Machava',
                     role: 2
