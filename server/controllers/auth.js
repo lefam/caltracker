@@ -65,6 +65,7 @@ module.exports = function(config, models) {
             lastName: req.body.lastName,
             email: req.body.email,
             password: req.body.password,
+            maxCaloriesPerDay: req.maxCaloriesPerDay || 250,
             role: 0
         };
 

@@ -210,3 +210,10 @@ main {
     font-size: 50px;
     font-weight: bold;
 }
+
+.d3-graph div {
+    padding: 3px 5px;
+    color: #fff;
+    background-color: #BADA55;
+    margin-bottom: 5px;
+}

@@ -3,9 +3,9 @@
         .module('app')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['MealService', 'ModalService', 'DateService', '$rootScope'];
+    HomeController.$inject = ['UserService', 'MealService', 'ModalService', 'DateService', '$rootScope'];
 
-    function HomeController(MealService, ModalService, DateService, $rootScope) {
+    function HomeController(UserService, MealService, ModalService, DateService, $rootScope) {
         var vm = this;
         vm.meals = [];
         vm.meal = {};
@@ -20,14 +20,14 @@
             timeTo: '11:59 PM'
         };
 
-        MealService.getTodayMeals()
-            .then( function(meals) {
-                vm.meals = meals;
-                vm.todayCalories = 0;
-                meals.forEach( function(m) {
-                    vm.todayCalories += m.calories;
-                });
-            });
+        //MealService.getTodayMeals()
+        //    .then( function(meals) {
+        //        vm.meals = meals;
+        //        vm.todayCalories = 0;
+        //        meals.forEach( function(m) {
+        //            vm.todayCalories += m.calories;
+        //        });
+        //    });
 
         this.applyFilter = function() {
             var from = new Date(this.filter.dateFrom + " " + this.filter.timeFrom);
@@ -39,7 +39,61 @@
                         //vm.todayCalories += m.calories;
                     });
                 });
+
+            MealService.getMealsGroupedByDay(from, to)
+                .then( function(grouped) {
+                    grouped = _.keys(grouped).map(function(k) {
+                        var obj = {data: k};
+                        obj.value = grouped[k];
+                        return obj;
+                    });
+                    //console.log(grouped);
+                    d3.select(".d3-graph")
+                        .selectAll("div")
+                        .data(grouped)
+                        .enter()
+                        .append("div")
+                        .text(function(d) {
+                            var total = 0;
+                            d.value.forEach( function(v) {
+                                total += v.calories;
+                            });
+
+                            return d.data + " (" + total + " calories)";
+                        })
+                        .style("width", function(d) {
+                            var total = 0;
+                            d.value.forEach( function(v) {
+                                total += v.calories;
+                            });
+                            if (total > 700) {
+                                total = 700;
+                            }
+                            return total * 1.5 + "px";
+                        })
+                        .style("background-color", function(d) {
+                            var total = 0;
+                            d.value.forEach( function(v) {
+                                total += v.calories;
+                            });
+                            if (total > 700) {
+                                total = 700;
+                            }
+                            if (total > vm.maxDailyCalories) {
+                                return "#D6523C";
+                            } else {
+                                return "#BADA55";
+                            }
+                        });
+                });
         };
+
+        UserService.getCurrentUser()
+            .then( function(user) {
+                vm.maxDailyCalories = user.maxCaloriesPerDay;
+                vm.applyFilter();
+                console.log(vm);
+            });
 
         this.closeModal = function() {
             this.isEditing = false;

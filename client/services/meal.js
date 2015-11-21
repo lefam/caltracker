@@ -10,6 +10,21 @@
             return response.data;
         }
 
+        this.getMealsGroupedByDay = function(from, to, all) {
+            var fromStamp = from.getTime();
+            var toStamp = to.getTime();
+            all = all || 0;
+            return $http
+                .get("/api/v1/meals?fromDateTime=" + fromStamp + "&toDateTime=" + toStamp + "&all=" + all)
+                .then( function(response) {
+                    var meals = response.data;
+                    var grouped  = _.groupBy(meals, function(m) {
+                        return m.dateTime.substring(0, 10);
+                    });
+                    return grouped;
+                });
+        };
+
         this.getMeals = function(from, to, all) {
             var fromStamp = from.getTime();
             var toStamp = to.getTime();

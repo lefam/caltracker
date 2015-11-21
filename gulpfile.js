@@ -32,6 +32,12 @@ gulp.task('vendor', function vendorTask() {
     gulp.src(['client/vendor/angular-loading-bar/**/*'])
         .pipe(gulp.dest('public/vendor/angular-loading-bar/'));
 
+    gulp.src(['client/vendor/underscore/**/*'])
+        .pipe(gulp.dest('public/vendor/underscore/'));
+
+    gulp.src(['client/vendor/d3/**/*'])
+        .pipe(gulp.dest('public/vendor/d3/'));
+
     gulp.src(['client/vendor/jquery/dist/**/*'])
         .pipe(gulp.dest('public/vendor/jquery/'));
 });
