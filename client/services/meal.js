@@ -3,9 +3,9 @@
         .module('app')
         .service('MealService', MealService);
 
-    MealService.$inject = ['$http'];
+    MealService.$inject = ['$http', 'DateService'];
 
-    function MealService($http) {
+    function MealService($http, DateService) {
         function handleSuccess(response) {
             return response.data;
         }
@@ -37,13 +37,15 @@
         this.getTodayMeals = function() {
             var now = new Date();
             var todayBegin = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            return this.getMeals(todayBegin, now);
+            var todayEnd = new Date(DateService.formatDate(todayBegin) + " 11:59 PM");
+            return this.getMeals(todayBegin, todayEnd);
         };
 
         this.getAllTodayMeals = function() {
             var now = new Date();
             var todayBegin = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            return this.getMeals(todayBegin, now, 1);
+            var todayEnd = new Date(DateService.formatDate(todayBegin) + " 11:59 PM");
+            return this.getMeals(todayBegin, todayEnd, 1);
         };
 
         this.addMeal = function(food, calories, date, time) {
