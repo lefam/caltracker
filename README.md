@@ -28,16 +28,22 @@ npm install protractor -g
 ```
 
 After you finish installing the above tools, please run the following command to install the app modules 
-(this is needed becuse we do not version control node modules):
+(this is needed because we do not version control node modules):
 
 ```
 npm install
 ```
 
-Finally you can start the app by running:
+Finally you can start the app. Please make sure that MongoDB is running and run the following command:
 
 ```
 npm start
 ```
 
 Now the app will be running at http://localhost:4001
+
+## Running tests
+
+The following commands are available to run tests:
+- `npm run test-api` --> to run API functional tests
+- `npm run test-api-cov` --> to run API functional tests and produce coverage reports (saved at ./coverage)
