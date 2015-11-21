@@ -15,6 +15,9 @@ The following tools are essential to contribute to the development of this proje
 
 ## Running the app
 
+In this section I present the steps that you must follow to prepare the app to run it locally. The app is also 
+available at https://whispering-fjord-4404.herokuapp.com
+
 Please make sure that you have [Node.js](http://nodejs.org) and NPM installed.
 
 After that please install the following tools:
