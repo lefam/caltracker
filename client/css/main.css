@@ -213,7 +213,9 @@ main {
 
 .d3-graph div {
     padding: 3px 5px;
-    color: #fff;
+    color: #333;
     background-color: #BADA55;
     margin-bottom: 5px;
+    font-size: 11px;
+    white-space: nowrap;
 }

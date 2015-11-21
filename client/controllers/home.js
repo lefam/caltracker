@@ -47,6 +47,8 @@
                         obj.value = grouped[k];
                         return obj;
                     });
+                    d3.select(".d3-graph").selectAll("div").remove();
+
                     //console.log(grouped);
                     d3.select(".d3-graph")
                         .selectAll("div")
@@ -66,6 +68,9 @@
                             d.value.forEach( function(v) {
                                 total += v.calories;
                             });
+                            //if (total < 100) {
+                            //    total = 100;
+                            //}
                             if (total > 700) {
                                 total = 700;
                             }
