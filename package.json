@@ -39,8 +39,10 @@
     "test": "gulp test",
     "start": "node server/app",
     "start-local": "NODE_ENV=local node server/app",
+    "start-test": "NODE_ENV=test node server/app",
     "test-api": "mocha test/api",
-    "test-api-cov": "istanbul cover _mocha -- -R spec test/api"
+    "test-api-cov": "istanbul cover _mocha -- -R spec test/api",
+    "test-e2e": "protractor test/e2e/conf.js"
   },
   "repository": {
     "type": "git",
