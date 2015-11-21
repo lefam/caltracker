@@ -97,7 +97,6 @@
             .then( function(user) {
                 vm.maxDailyCalories = user.maxCaloriesPerDay;
                 vm.applyFilter();
-                console.log(vm);
             });
 
         this.closeModal = function() {

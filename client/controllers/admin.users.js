@@ -15,10 +15,14 @@
             vm.roles.push({id: 2, desc: 'Admin'});
         }
 
-        UserService.getUsers()
-            .then( function(users) {
-                vm.users = users;
-            });
+        this.fetchUsers = function() {
+            UserService.getUsers()
+                .then( function(users) {
+                    vm.users = users;
+                });
+        }
+
+        this.fetchUsers();
 
         this.toggleChangePassword = function() {
             this.isChangingPassword = !this.isChangingPassword;
@@ -28,6 +32,11 @@
             vm.user = {};
             this.isEditingUser = false;
             ModalService.close();
+        };
+
+        this.cancel = function() {
+            this.fetchUsers();
+            this.closeModal();
         };
 
         this.showUserEditForm = function(user) {
@@ -59,7 +68,6 @@
 
         this.addOrUpdateUser = function() {
             var u = vm.user;
-            console.log(u);
             if (vm.isEditingUser) {
                 UserService.updateUser(u)
                     .then( function(user) {
