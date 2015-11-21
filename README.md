@@ -50,3 +50,25 @@ Now the app will be running at http://localhost:4001
 The following commands are available to run tests:
 - `npm run test-api` --> to run API functional tests
 - `npm run test-api-cov` --> to run API functional tests and produce coverage reports (saved at ./coverage)
+
+## Deploying to Heroku
+
+The app is prepared to be easily deployed to [Heroku](http://heroku.com). To deploy create a Heroku app and repository
+and push the code with `git push heroku master`. Heroku will install all the necessary tools and modules and run the
+gulp tasks.
+
+Before you use the app you will need to set the vars (`NPM_CONFIG_PRODUCTION`, DATABASE_URL` and `TOKEN_SIGN_SECRET`).`
+
+- NPM_CONFIG_PRODUCTION should be false
+- DATABASE_URL should point to your MongoDB database url
+- TOKEN_SIGN_SECRET should be a secret phrase and is used to sign and verify JWT tokens.
+
+Eg:
+
+```
+heroku config:set NPM_CONFIG_PRODUCTION=false
+heroku config:set DATABASE_URL=mongodb://user:password@yourserver.com
+heroku config:set TOKEN_SIGN_SECRET=mysecret_token
+```
+
+You can use the Heroku MongoLab addon to create a free MongoDB database.
