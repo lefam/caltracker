@@ -1,7 +1,0 @@
-Hello.
-
-I am using the MEAN stack (MongoDB + Express.js + Angular + Node.js).
-Bower will be used to handle front end components.
-Gulp will be used to run tasks such as CSS and JS minifying and building the final package.
-NPM is also used to manage Node packages (tools and libraries).
-
