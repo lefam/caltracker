@@ -18,6 +18,7 @@ module.exports = function(config, models) {
                     password: 'leonel',
                     firstName: 'Leonel',
                     lastName: 'Machava',
+                    maxCaloriesPerDay: 250,
                     role: 2
                 };
                 bcrypt.hash(adminUser.password, 10, function(err, hash) {
